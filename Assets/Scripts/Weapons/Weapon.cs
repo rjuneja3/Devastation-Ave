@@ -1,32 +1,49 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon {
+[RequireComponent(typeof(AudioSource))]
+public abstract class Weapon : MonoBehaviour {
+    #region Exposed Variables
+    public float RateOfAttack = .5f;
+    public float Range = 100f;
+    public float Damage = 10f;
+    public bool DebugMode = true;
+    #endregion
 
-    public readonly GameObject WeaponPrefab;
-    public readonly string Name;
-    // TODO: store audio clip, and play for later use
+    #region Variables
+    protected bool CanAttack = true;
+    protected AudioSource AudioSource;
+    #endregion
 
-    public WeaponType Type { get; private set; }
-    public float RateOfAttack { get; private set; } = 60f;
+    #region Properties
+    #endregion
 
-    public Weapon(GameObject prefab, string name, WeaponType type, float rateOfAttack) {
-        WeaponPrefab = prefab;
-        Name = name;
-        Type = type;
-        RateOfAttack = rateOfAttack;
+    #region Methods
+    public event Action<GameObject> OnHit;
+
+    protected virtual void Start() {
+        AudioSource = GetComponent<AudioSource>();
     }
 
-    public GameObject Instantiate(Transform parent) {
-        return Object.Instantiate(WeaponPrefab, parent);
-    }
-}
+    private void SetAttackFlag() => CanAttack = true;
+    
+    public void TryAttacking() {
+        if (CanAttack) {
+            CanAttack = false;
+            Invoke("SetAttackFlag", RateOfAttack);
+        } else return;
 
-public enum WeaponType {
-    None = 0,
-    FullAuto = 1,
-    SemiAuto = 2,
-    PumpAction = 3,
-    Melee = 4
+        AudioSource.Play();
+
+        Attack();
+    }
+
+    public virtual void Hit(GameObject o) {
+        OnHit?.Invoke(o);
+    }
+
+    public abstract void Attack();
+    #endregion
 }
