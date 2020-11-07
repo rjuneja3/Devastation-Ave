@@ -40,9 +40,12 @@ public class WeaponHandler : MonoBehaviour {
         var w = weapon.GetComponent<Weapon>();
 
         if (w) {
+            var pos = Vector3.one * .5f;
             CurrentWeapon = w;
             weapon.transform.SetParent(transform);
-            weapon.transform.localPosition = Vector3.forward;
+            weapon.transform.localPosition = pos;
+            // new Vector3(-.5f, 0)
+            weapon.transform.LookAt(transform.position + pos + (transform.forward * 100f));
         }
         
     }
