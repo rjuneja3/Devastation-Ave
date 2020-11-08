@@ -33,7 +33,7 @@ public class WeaponHandler : MonoBehaviour {
     }
 
     void Update() {
-        if (!HasWeapon && Vector3.Distance(transform.position, _TestWeapon.transform.position) <= 1f) {
+        if (_TestWeapon && !HasWeapon && Vector3.Distance(transform.position, _TestWeapon.transform.position) <= 1f) {
             PickUp(_TestWeapon);
         }
 

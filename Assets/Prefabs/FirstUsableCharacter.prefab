@@ -248,8 +248,8 @@ GameObject:
   - component: {fileID: 8807116310363283854}
   - component: {fileID: 8807116310363283855}
   m_Layer: 0
-  m_Name: Alpha@Alpha
-  m_TagString: Untagged
+  m_Name: FirstUsableCharacter
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

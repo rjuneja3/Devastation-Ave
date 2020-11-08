@@ -84,9 +84,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
 
-
+        //private int land = 0;
         private void PlayLandingSound()
         {
+            //print($"Playing landing {++land}");
             m_AudioSource.clip = m_LandSound;
             m_AudioSource.Play();
             m_NextStep = m_StepCycle + .5f;
