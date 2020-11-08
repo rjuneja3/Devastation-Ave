@@ -32,7 +32,7 @@ public class BasicController2 : MonoBehaviour {
     private Quaternion OriginRifleRot;
     private MouseAim Aim;
 
-    private bool hrifle = false;
+    //private bool hrifle = false;
     /*public bool HasRifle {get{return hrifle;}
         set {hrifle=value;
             if (hrifle) {

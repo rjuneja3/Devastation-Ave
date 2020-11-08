@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour {
+    private static readonly Vector3 FirearmPosition = new Vector3(0.241f, -0.03f, 0.019f);
+    private static readonly Vector3 FirearmEulerRotation = new Vector3(-0.365f, 94.091f, 90.735f);
 
     #region Exposed Variables
+    public Transform RightHand;
     #endregion
 
     #region Variables
     private GameObject _TestWeapon;
+    private PlayerController PlayerController;
     #endregion
 
     #region Properties
@@ -24,6 +28,8 @@ public class WeaponHandler : MonoBehaviour {
     void Start() {
         _TestWeapon = GameObject.FindGameObjectWithTag("Weapon");
         print("TEST WEAPON: " + _TestWeapon);
+
+        PlayerController = GetComponent<PlayerController>();
     }
 
     void Update() {
@@ -40,12 +46,12 @@ public class WeaponHandler : MonoBehaviour {
         var w = weapon.GetComponent<Weapon>();
 
         if (w) {
-            var pos = Vector3.one * .5f;
             CurrentWeapon = w;
-            weapon.transform.SetParent(transform);
-            weapon.transform.localPosition = pos;
+            weapon.transform.SetParent(RightHand);
+            weapon.transform.localPosition = FirearmPosition;
+            PlayerController?.ActivateLayer(PlayerController.Layer.Firearm);
             // new Vector3(-.5f, 0)
-            weapon.transform.LookAt(transform.position + pos + (transform.forward * 100f));
+            weapon.transform.localEulerAngles = FirearmEulerRotation;
         }
         
     }
