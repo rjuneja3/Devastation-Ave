@@ -1,41 +1,42 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour {
-    #region Exposed Variables
-    public float StartingHealth = 100;
-    public bool DestroyOnDeath = true;
-    #endregion
+namespace Assets.Scripts.Player
+{
+    public class Health : MonoBehaviour {
+        #region Exposed Variables
+        public float StartingHealth = 100;
+        public bool DestroyOnDeath = true;
+        #endregion
 
-    #region Varibles
-    private bool TriggeredFinish = false;
-    #endregion
+        #region Varibles
+        private bool TriggeredFinish = false;
+        #endregion
 
-    #region Properties
-    public float CurrentAmount { get; set; }
-    #endregion
+        #region Properties
+        public float CurrentAmount { get; set; }
+        #endregion
 
-    #region Methods
-    public event Action<GameObject> OnDeath;
+        #region Methods
+        public event Action<GameObject> OnDeath;
 
-    void Start() {
-        CurrentAmount = StartingHealth;
-    }
-
-    void Update() {
-        if (CurrentAmount <= 0 && !TriggeredFinish) {
-            TriggeredFinish = true;
-            HandleDeath();
+        void Start() {
+            CurrentAmount = StartingHealth;
         }
-    }
 
-    void HandleDeath() {
-        OnDeath?.Invoke(gameObject);
-        if (DestroyOnDeath) {
-            Destroy(gameObject);
+        void Update() {
+            if (CurrentAmount <= 0 && !TriggeredFinish) {
+                TriggeredFinish = true;
+                HandleDeath();
+            }
         }
+
+        void HandleDeath() {
+            OnDeath?.Invoke(gameObject);
+            if (DestroyOnDeath) {
+                Destroy(gameObject);
+            }
+        }
+        #endregion
     }
-    #endregion
 }

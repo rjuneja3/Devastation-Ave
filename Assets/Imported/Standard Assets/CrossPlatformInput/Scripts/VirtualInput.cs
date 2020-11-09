@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace UnityStandardAssets.CrossPlatformInput
+namespace Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts
 {
     public abstract class VirtualInput
     {

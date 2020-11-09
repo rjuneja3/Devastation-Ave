@@ -1,8 +1,7 @@
-using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Cameras
+namespace Assets.Imported.Standard_Assets.Cameras.Scripts
 {
     public class FreeLookCam : PivotBasedCameraRig
     {

@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Vehicles.Car
+namespace Assets.Imported.Standard_Assets.Vehicles.Car.Scripts
 {
     public class SkidTrail : MonoBehaviour
     {

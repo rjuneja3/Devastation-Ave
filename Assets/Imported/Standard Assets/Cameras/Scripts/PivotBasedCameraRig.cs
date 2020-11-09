@@ -1,8 +1,6 @@
-using System;
 using UnityEngine;
 
-
-namespace UnityStandardAssets.Cameras
+namespace Assets.Imported.Standard_Assets.Cameras.Scripts
 {
     public abstract class PivotBasedCameraRig : AbstractTargetFollower
     {

@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Vehicles.Car
+namespace Assets.Imported.Standard_Assets.Vehicles.Car.Scripts
 {
     internal enum CarDriveType
     {
