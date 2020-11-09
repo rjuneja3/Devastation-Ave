@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace UnityStandardAssets.Vehicles.Car
+namespace Assets.Imported.Standard_Assets.Vehicles.Car.Scripts
 {
     [RequireComponent(typeof (CarController))]
     public class CarAudio : MonoBehaviour
