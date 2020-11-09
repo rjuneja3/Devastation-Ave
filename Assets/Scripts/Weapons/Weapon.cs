@@ -42,6 +42,13 @@ public abstract class Weapon : MonoBehaviour {
 
     public virtual void Hit(GameObject o) {
         OnHit?.Invoke(o);
+        if (o.tag == "Enemy") {
+            var health = o.GetComponent<Health>();
+            health.CurrentAmount -= Math.Abs(Damage);
+            print("Hit enemy!!!");
+        }
+
+        print($"Hit: {o.name} [{o.tag}]");
     }
 
     public abstract void Attack();

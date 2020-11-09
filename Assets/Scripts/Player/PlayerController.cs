@@ -4,7 +4,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
-// [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Health))]
 public class PlayerController : MonoBehaviour {
 
     public enum Layer {
@@ -26,9 +26,6 @@ public class PlayerController : MonoBehaviour {
     private MouseLook MouseLook;// = new MouseLook();
     private CollisionFlags CollisionFlags;
     private bool CanJump = true;
-    private float verticalSpeed = 0f;
-    private float VelocityX = 0f;
-    private float VelocityZ = 0f;
     #endregion
 
     #region Properties
@@ -50,9 +47,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-
     #region Methods
-
     public void ActivateLayer(Layer layer) {
 
         void set(Layer a, float w) {
@@ -75,7 +70,7 @@ public class PlayerController : MonoBehaviour {
         // Rigidbody = GetComponent<Rigidbody>();
         //ActivateLayer(Layer.Firearm);
     }
-    
+
     void Update() {
         //Look();
 
@@ -84,7 +79,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         //if (IsGrounded) {
-         Move();
+        Move();
         //}
 
 
@@ -100,9 +95,13 @@ public class PlayerController : MonoBehaviour {
         CharacterController.Move(move);*/
         //print(IsGrounded + " : " + HorizontalAxis + ", " + VerticalAxis);
 
-        if (Fire1) { // TODO: Need to match actual fire rate
+        /*if (Fire1) { // TODO: Need to match actual fire rate
             Animator.SetTrigger("Fire");
-        }
+        }*/
+    }
+
+    public void TriggerFire() {
+        Animator.SetTrigger("Fire");
     }
 
     private void FixedUpdate() {
@@ -112,7 +111,6 @@ public class PlayerController : MonoBehaviour {
     private void Move() {
         if (Input.GetKey(KeyCode.Space)) {
             Animator.SetTrigger("Jump");
-            verticalSpeed = JumpHeight;
         }
 
         const float speedLimit = 1;

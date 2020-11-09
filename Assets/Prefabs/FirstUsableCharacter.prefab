@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 8807116310363283853}
   - component: {fileID: 8807116310363283854}
   - component: {fileID: 8807116310363283855}
+  - component: {fileID: 234604405482114999}
   m_Layer: 0
   m_Name: FirstUsableCharacter
   m_TagString: Player
@@ -550,6 +551,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RightHand: {fileID: 8807116310429218283}
+--- !u!114 &234604405482114999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807116310428854275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f027ab5fd628140bb41dec0348336a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartingHealth: 100
+  DestroyOnDeath: 0
 --- !u!1 &8807116310428854277
 GameObject:
   m_ObjectHideFlags: 0

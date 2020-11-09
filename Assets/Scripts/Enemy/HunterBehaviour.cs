@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+// TODO: abstract out Enemy based behaviour
 [RequireComponent(typeof(Animator))]
-// [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class HunterBehaviour : MonoBehaviour {
     
     public enum HunterState {
@@ -22,6 +25,7 @@ public class HunterBehaviour : MonoBehaviour {
 
     #region Varibles
     private Animator Animator;
+    private NavMeshAgent Agent;
     private Transform Player;
     private HunterState State = HunterState.Idle;
     private Vector3 Point;
@@ -33,7 +37,10 @@ public class HunterBehaviour : MonoBehaviour {
     #region Properties
     private bool DetectedPlayer {
         get => m_DetectedPlayer;
-        set => print($"Detected Player ${m_DetectedPlayer = value}");
+        set {
+            m_DetectedPlayer = value;
+            // print($"Detected Player ${value}");
+        }
     }
 
     public bool PlayerInRange => Player &&
@@ -56,6 +63,7 @@ public class HunterBehaviour : MonoBehaviour {
     #region Methods
     void Start() {
         Animator = GetComponent<Animator>();
+        Agent = GetComponent<NavMeshAgent>();
 
         var p = GameObject.FindGameObjectWithTag("Player");
         if (p) Player = p.transform;
@@ -63,6 +71,7 @@ public class HunterBehaviour : MonoBehaviour {
     }
 
     private void LookAt(Vector3 pos) {
+        if (pos == Vector3.zero) return;
         var dir = pos - transform.position;
         dir.y = 0;
         transform.rotation = Quaternion.LookRotation(dir);
@@ -95,38 +104,51 @@ public class HunterBehaviour : MonoBehaviour {
     private void Idle() {
         if (!CalledStopIdle) {
             CalledStopIdle = true;
+            Stop();
             Invoke("StopIdle", 3);
+            LookAt(Agent.destination);
             Animator.SetFloat("ZSpeed", 0);
         }
     }
 
     private void StopIdle() {
-        TransitionTo(HunterState.Seek);
+        if (State != HunterState.Seek) {
+            TransitionTo(HunterState.Seek);
+        }
     }
 
     private void Attack() {
-        var p = Player?.position ?? Vector3.zero;
-        if (!VectorHelper.WithinRange(transform.position, p, 2)) {
+        if (!At(Player.position)) {
             Animator.SetBool("Attack", false);
             TransitionTo(HunterState.Seek);
             return;
         }
 
         if (!IsAttacking) {
+            Stop();
             Animator.SetBool("Attack", IsAttacking = true);
-            Animator.SetFloat("ZSpeed", 0f);
         }
     }
+
     private void Seek() {
-        var p = DetectedPlayer ? (Player?.position ?? Vector3.zero) : Point;
+        var p = DetectedPlayer ? Player.position : Point;
         
-        if (VectorHelper.WithinRange(transform.position, p, 2)) {
-            var state = DetectedPlayer ? HunterState.Attack : HunterState.Idle;
-            TransitionTo(state);
+        Agent.SetDestination(p);
+        
+        if (At(p)) {
+            TransitionTo(DetectedPlayer
+                ? HunterState.Attack
+                : HunterState.Idle);
+
         } else {
-            var speed = DetectedPlayer ? 2f : .5f;
-            Animator.SetFloat("ZSpeed", speed);
+            float speed = DetectedPlayer ? 3f : 1f;
+            Animator.SetFloat("ZSpeed", speed / 2f);
+            Agent.speed = speed;
         }
+    }
+
+    private void SeekPlayer() {
+
     }
 
     private void TransitionTo(HunterState state) {
@@ -149,7 +171,15 @@ public class HunterBehaviour : MonoBehaviour {
             LookAt(p);
             print($"POINT: {Point}");
         }
-    } 
+    }
+
+    public bool At(Vector3 destination) {
+        return VectorHelper.WithinRange(transform.position, destination, 1f);
+    }
+
+    public void Stop() {
+        Agent.SetDestination(transform.position);
+    }
 
     #endregion
 }

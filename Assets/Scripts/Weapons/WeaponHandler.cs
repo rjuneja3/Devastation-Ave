@@ -52,6 +52,10 @@ public class WeaponHandler : MonoBehaviour {
             PlayerController?.ActivateLayer(PlayerController.Layer.Firearm);
             // new Vector3(-.5f, 0)
             weapon.transform.localEulerAngles = FirearmEulerRotation;
+
+            if (w is Firearm f) {
+                f.OnShoot += PlayerController.TriggerFire;
+            }
         }
         
     }
