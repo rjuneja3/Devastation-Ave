@@ -17,7 +17,6 @@ public class WeaponHandler : MonoBehaviour {
 
     #region Properties
     public Weapon CurrentWeapon { get; private set; } = null;
-    public float CurrentRateOfAttack { get; private set; } = /* for testing */ .5f;
     public bool HasWeapon => CurrentWeapon;
     public float MouseX => Input.GetAxis("Mouse X");
     public float MouseY => Input.GetAxis("Mouse Y");
@@ -33,31 +32,42 @@ public class WeaponHandler : MonoBehaviour {
     }
 
     void Update() {
-        if (_TestWeapon && !HasWeapon && Vector3.Distance(transform.position, _TestWeapon.transform.position) <= 1f) {
+        /*if (_TestWeapon && !HasWeapon && Vector3.Distance(transform.position, _TestWeapon.transform.position) <= 1f) {
             PickUp(_TestWeapon);
-        }
+        }*/
 
         if (Fire1 && CurrentWeapon) {
             CurrentWeapon.TryAttacking();
         }
     }
 
-    private void PickUp(GameObject weapon) {
-        var w = weapon.GetComponent<Weapon>();
+    public void PickUp(GameObject weapon) {
+        Weapon Weapon;
+        try {
+            Weapon = weapon.GetComponent<Weapon>();
+        } catch (System.Exception) { return; }
 
-        if (w) {
-            CurrentWeapon = w;
+        if (Weapon) {
+            if (CurrentWeapon) {
+                if (CurrentWeapon is Firearm a)
+                    a.OnShoot -= PlayerController.TriggerFire;
+                CurrentWeapon.gameObject.transform.SetParent(null);
+                CurrentWeapon.IsPickedUp = false;
+            }
+            CurrentWeapon = Weapon;
             weapon.transform.SetParent(RightHand);
             weapon.transform.localPosition = FirearmPosition;
             PlayerController?.ActivateLayer(PlayerController.Layer.Firearm);
+            CurrentWeapon.IsPickedUp = true;
             // new Vector3(-.5f, 0)
             weapon.transform.localEulerAngles = FirearmEulerRotation;
 
-            if (w is Firearm f) {
+            if (Weapon is Firearm f) {
                 f.OnShoot += PlayerController.TriggerFire;
             }
+
+            HudHandler.ClearPrompt();
         }
-        
     }
     #endregion
 }

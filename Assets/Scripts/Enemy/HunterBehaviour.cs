@@ -31,10 +31,21 @@ public class HunterBehaviour : MonoBehaviour {
     private Vector3 Point;
     private bool CalledStopIdle = false;
     private bool m_DetectedPlayer = false;
-    private bool IsAttacking = false;
+    private bool m_IsAttacking = false;
+    private float m_ZSpeed = 0;
     #endregion
 
     #region Properties
+    public bool IsAttacking {
+        get => m_IsAttacking;
+        set => Animator.SetBool("Attack", m_IsAttacking = value);
+    }
+
+    public float ZSpeed {
+        get => m_ZSpeed;
+        set => Animator.SetFloat("ZSpeed", m_ZSpeed = value);
+    }
+
     private bool DetectedPlayer {
         get => m_DetectedPlayer;
         set {
@@ -68,6 +79,12 @@ public class HunterBehaviour : MonoBehaviour {
         var p = GameObject.FindGameObjectWithTag("Player");
         if (p) Player = p.transform;
         TransitionTo(HunterState.Idle);
+
+        var hitBoxes = GetComponentsInChildren<HitBox>();
+
+        foreach (var b in hitBoxes) {
+            b.OnCollide += OnHitBoxCollide;
+        }
     }
 
     private void LookAt(Vector3 pos) {
@@ -107,7 +124,7 @@ public class HunterBehaviour : MonoBehaviour {
             Stop();
             Invoke("StopIdle", 3);
             LookAt(Agent.destination);
-            Animator.SetFloat("ZSpeed", 0);
+            ZSpeed = 0;
         }
     }
 
@@ -119,14 +136,14 @@ public class HunterBehaviour : MonoBehaviour {
 
     private void Attack() {
         if (!At(Player.position)) {
-            Animator.SetBool("Attack", false);
+            IsAttacking = false;
             TransitionTo(HunterState.Seek);
             return;
         }
 
         if (!IsAttacking) {
             Stop();
-            Animator.SetBool("Attack", IsAttacking = true);
+            IsAttacking = true;
         }
     }
 
@@ -142,7 +159,7 @@ public class HunterBehaviour : MonoBehaviour {
 
         } else {
             float speed = DetectedPlayer ? 3f : 1f;
-            Animator.SetFloat("ZSpeed", speed / 2f);
+            ZSpeed = speed / 2f;
             Agent.speed = speed;
         }
     }
@@ -179,6 +196,20 @@ public class HunterBehaviour : MonoBehaviour {
 
     public void Stop() {
         Agent.SetDestination(transform.position);
+    }
+
+    private void OnTriggerEnter(Collider o) {
+        OnHitBoxCollide(o.gameObject);
+    }
+
+    private void OnHitBoxCollide(GameObject o) {
+        if (IsAttacking && o.tag == "Player") {
+            var health = o.GetComponent<Health>();
+            if (health) health.CurrentAmount -= Power;
+            print($"Hit player!!! [deduction ({!!health}]");
+        } else {
+            print($"HIT: {o.gameObject.name} [{o.gameObject.tag}]");
+        }
     }
 
     #endregion

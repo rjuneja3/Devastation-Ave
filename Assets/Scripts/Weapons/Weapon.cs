@@ -13,11 +13,22 @@ public abstract class Weapon : MonoBehaviour {
     #endregion
 
     #region Variables
+    private const float pickupDistance = 1.5f;
     protected bool CanAttack = true;
     protected AudioSource AudioSource;
+    protected Transform Player;
+    private bool m_IsPrompting = false, m_IsPickedUp = false;
+    private WeaponHandler PlayerWeaponHandler;
     #endregion
 
     #region Properties
+    public bool IsPickedUp {
+        get => m_IsPickedUp;
+        set {
+            m_IsPickedUp = value;
+            m_IsPrompting = false;
+        }
+    }
     #endregion
 
     #region Methods
@@ -25,6 +36,8 @@ public abstract class Weapon : MonoBehaviour {
 
     protected virtual void Start() {
         AudioSource = GetComponent<AudioSource>();
+        Utils.FindPlayer(ref Player);
+        PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
     }
 
     private void SetAttackFlag() => CanAttack = true;
@@ -49,6 +62,27 @@ public abstract class Weapon : MonoBehaviour {
         }
 
         print($"Hit: {o.name} [{o.tag}]");
+    }
+
+    protected virtual void Update() {
+        if (IsPickedUp) return;
+
+        if (CheckPrompt() && Input.GetKeyDown(KeyCode.E)) {
+            PlayerWeaponHandler.PickUp(gameObject);
+        }
+    }
+
+    private bool CheckPrompt() {
+        if (Player && VectorHelper.WithinRange(Player.position, transform.position, pickupDistance)) {
+            if (!m_IsPrompting) {
+                m_IsPrompting = true;
+                HudHandler.Prompt(KeyCode.E, $"for {name}");
+            }
+        } else if (m_IsPrompting) {
+            m_IsPrompting = false;
+            HudHandler.ClearPrompt();
+        }
+        return m_IsPrompting;
     }
 
     public abstract void Attack();

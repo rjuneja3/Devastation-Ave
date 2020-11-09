@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityStandardAssets.Characters.FirstPerson;
 
 [RequireComponent(typeof(Animator))]
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour {
     private CharacterController CharacterController;
     private Rigidbody Rigidbody;
     private Animator Animator;
-    private MouseLook MouseLook;// = new MouseLook();
+    private Health Health;
     private CollisionFlags CollisionFlags;
     private bool CanJump = true;
     #endregion
@@ -67,8 +68,24 @@ public class PlayerController : MonoBehaviour {
         //MouseLook.Init(transform, Camera.main.transform);
         CharacterController = GetComponent<CharacterController>();
         Animator = GetComponent<Animator>();
+        Health = GetComponent<Health>();
+        Health.OnHealthChange += OnHealthChange;
+        Health.OnDeath += OnDeath;
         // Rigidbody = GetComponent<Rigidbody>();
         //ActivateLayer(Layer.Firearm);
+    }
+
+    private void OnHealthChange(float prevAmount, float currentAmount) {
+        print($"Health Decrease: {prevAmount} -> {currentAmount}");
+    }
+
+    private void OnDeath(GameObject _) {
+        Invoke("ReloadScene", 5f);
+    }
+
+    private void ReloadScene() {
+        var scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
     }
 
     void Update() {
@@ -104,9 +121,9 @@ public class PlayerController : MonoBehaviour {
         Animator.SetTrigger("Fire");
     }
 
-    private void FixedUpdate() {
+    /*private void FixedUpdate() {
         //MouseLook.UpdateCursorLock();
-    }
+    }*/
 
     private void Move() {
         if (Input.GetKey(KeyCode.Space)) {
@@ -141,9 +158,9 @@ public class PlayerController : MonoBehaviour {
     }
 
 
-    private void Look() {
-        MouseLook.LookRotation(transform, Camera.main.transform);
-    }
+    /*private void Look() {
+        //MouseLook.LookRotation(transform, Camera.main.transform);
+    }*/
 
 
     /*public void OnCollisionEnter(Collision c) {
