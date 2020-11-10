@@ -7,10 +7,24 @@ public class HudHandler : MonoBehaviour {
     #region Exposed Variables
     public Text PromptText;
     public Text DialogText;
+    public Text PointsText;
     #endregion
 
+    #region Variables
+    private static int m_Points = 0;
+    #endregion
     #region Properties
     public static HudHandler Self { get; private set; }
+    public static int Points {
+        get => m_Points;
+        set {
+            m_Points = value;
+            if (Self && Self.PointsText) {
+                Self.PointsText.text = $"{m_Points}";
+            }
+            PlayerPrefs.SetInt("Hiscore", m_Points);
+        }
+    }
     #endregion
 
     #region Methods
@@ -20,14 +34,15 @@ public class HudHandler : MonoBehaviour {
     }
 
     private void Start() {
-        if (!PromptText) {
-            var p = transform.Find("PromptText");
-            if (p) PromptText = p.GetComponent<Text>();
-        }
+        GetText("DialogText", ref DialogText);
+        GetText("DialogText", ref DialogText);
+        GetText("PointsText", ref PointsText);
+    }
 
-        if (!DialogText) {
-            var d = transform.Find("DialogText");
-            if (d) DialogText = d.GetComponent<Text>();
+    private void GetText(string n, ref Text field) {
+        if (!field) {
+            var t = transform.Find(n);
+            if (t) field = t.GetComponent<Text>();
         }
     }
     
