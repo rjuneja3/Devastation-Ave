@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
-public class HitBox : MonoBehaviour {
+namespace Assets.Scripts.Player {
 
-    #region Methods
-    public event System.Action<GameObject> OnCollide;
+    [RequireComponent(typeof(BoxCollider))]
+    public class HitBox : MonoBehaviour {
 
-    private void OnTriggerEnter(Collider c) {
-        Collide(c.gameObject);
+        #region Methods
+        public event System.Action<GameObject> OnCollide;
+
+        private void OnTriggerEnter(Collider c) {
+            Collide(c.gameObject);
+        }
+
+        private void OnCollisionEnter(Collision c) {
+            Collide(c.gameObject);
+        }
+
+        private void Collide(GameObject o) {
+            OnCollide?.Invoke(o);
+        }
+        #endregion
     }
-
-    private void OnCollisionEnter(Collision c) {
-        Collide(c.gameObject);
-    }
-
-    private void Collide(GameObject o) {
-        OnCollide?.Invoke(o);
-    }
-    #endregion
 }
