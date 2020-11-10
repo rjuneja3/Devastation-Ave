@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Vehicles.Aeroplane
+namespace Assets.Imported.Standard_Assets.Vehicles.Aircraft.Scripts
 {
     public class AeroplaneControlSurfaceAnimator : MonoBehaviour
     {

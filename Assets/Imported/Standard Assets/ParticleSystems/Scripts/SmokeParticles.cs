@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace UnityStandardAssets.Effects
+namespace Assets.Imported.Standard_Assets.ParticleSystems.Scripts
 {
     public class SmokeParticles : MonoBehaviour
     {

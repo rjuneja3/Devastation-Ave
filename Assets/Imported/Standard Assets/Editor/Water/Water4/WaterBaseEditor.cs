@@ -1,11 +1,11 @@
-using UnityEngine;
+using Assets.Imported.Standard_Assets.Environment.Water.Water.Scripts;
 using UnityEditor;
+using UnityEngine;
 
-
-namespace UnityStandardAssets.Water
+namespace Assets.Imported.Standard_Assets.Editor.Water.Water4
 {
     [CustomEditor(typeof(WaterBase))]
-    public class WaterBaseEditor : Editor
+    public class WaterBaseEditor : UnityEditor.Editor
     {
         public GameObject oceanBase;
         private WaterBase waterBase;

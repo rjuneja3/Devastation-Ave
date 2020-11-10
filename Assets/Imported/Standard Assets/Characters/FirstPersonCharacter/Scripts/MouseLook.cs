@@ -1,8 +1,8 @@
 using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Characters.FirstPerson
+namespace Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Scripts
 {
     [Serializable]
     public class MouseLook

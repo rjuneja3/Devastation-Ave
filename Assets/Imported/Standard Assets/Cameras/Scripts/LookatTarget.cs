@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Cameras
+namespace Assets.Imported.Standard_Assets.Cameras.Scripts
 {
     public class LookatTarget : AbstractTargetFollower
     {

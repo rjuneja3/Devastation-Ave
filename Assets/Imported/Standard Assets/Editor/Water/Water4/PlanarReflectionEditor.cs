@@ -1,11 +1,11 @@
-using UnityEngine;
+using Assets.Imported.Standard_Assets.Environment.Water.Water.Scripts;
 using UnityEditor;
+using UnityEngine;
 
-
-namespace UnityStandardAssets.Water
+namespace Assets.Imported.Standard_Assets.Editor.Water.Water4
 {
     [CustomEditor(typeof(PlanarReflection))]
-    public class PlanarReflectionEditor : Editor
+    public class PlanarReflectionEditor : UnityEditor.Editor
     {
         private SerializedObject serObj;
 

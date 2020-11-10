@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Utility
+namespace Assets.Imported.Standard_Assets.Utility
 {
 	public class SmoothFollow : MonoBehaviour
 	{

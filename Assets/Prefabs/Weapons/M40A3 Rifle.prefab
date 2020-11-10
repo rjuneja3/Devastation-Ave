@@ -206,12 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99d907ba21addee4c826aa3ec6f760c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RateOfAttack: 0.5
+  RateOfAttack: 1.5
   Range: 100
-  Damage: 10
+  Damage: 80
   DebugMode: 1
   HipFireRadius: 60
-  MagSize: 30
+  MagSize: 5
   Ammo: 0
   BulletCount: 1
 --- !u!82 &837665969968352660
@@ -224,9 +224,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 08089194ba023a14994b0cce6e8e3671, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.81
   m_Pitch: 1
   Loop: 0
   Mute: 0

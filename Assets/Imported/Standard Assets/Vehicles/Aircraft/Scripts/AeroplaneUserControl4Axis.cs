@@ -1,8 +1,7 @@
-using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Vehicles.Aeroplane
+namespace Assets.Imported.Standard_Assets.Vehicles.Aircraft.Scripts
 {
     [RequireComponent(typeof (AeroplaneController))]
     public class AeroplaneUserControl4Axis : MonoBehaviour
