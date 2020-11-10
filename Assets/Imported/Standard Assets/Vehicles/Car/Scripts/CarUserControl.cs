@@ -1,8 +1,7 @@
-using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Vehicles.Car
+namespace Assets.Imported.Standard_Assets.Vehicles.Car.Scripts
 {
     [RequireComponent(typeof (CarController))]
     public class CarUserControl : MonoBehaviour

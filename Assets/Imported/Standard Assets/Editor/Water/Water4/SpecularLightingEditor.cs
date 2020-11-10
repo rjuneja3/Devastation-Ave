@@ -1,10 +1,11 @@
-using UnityEngine;
+using Assets.Imported.Standard_Assets.Environment.Water.Water.Scripts;
 using UnityEditor;
+using UnityEngine;
 
-namespace UnityStandardAssets.Water
+namespace Assets.Imported.Standard_Assets.Editor.Water.Water4
 {
     [CustomEditor(typeof(SpecularLighting))]
-    public class SpecularLightingEditor : Editor
+    public class SpecularLightingEditor : UnityEditor.Editor
     {
         private SerializedObject serObj;
         private SerializedProperty specularLight;

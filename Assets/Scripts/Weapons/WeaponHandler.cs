@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.Scripts.Player;
 using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour {
@@ -36,10 +35,15 @@ public class WeaponHandler : MonoBehaviour {
             PickUp(_TestWeapon);
         }*/
 
-        if (Fire1 && CurrentWeapon) {
-            CurrentWeapon.TryAttacking();
+        void Update() {
+            if (_TestWeapon && !HasWeapon && Vector3.Distance(transform.position, _TestWeapon.transform.position) <= 1f) {
+                PickUp(_TestWeapon);
+            }
+
+            if (Fire1 && CurrentWeapon) {
+                CurrentWeapon.TryAttacking();
+            }
         }
-    }
 
     public void PickUp(GameObject weapon) {
         Weapon Weapon;
@@ -69,5 +73,4 @@ public class WeaponHandler : MonoBehaviour {
             HudHandler.ClearPrompt();
         }
     }
-    #endregion
 }

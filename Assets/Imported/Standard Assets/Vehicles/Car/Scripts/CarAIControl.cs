@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 #pragma warning disable 649
-namespace UnityStandardAssets.Vehicles.Car
+namespace Assets.Imported.Standard_Assets.Vehicles.Car.Scripts
 {
     [RequireComponent(typeof (CarController))]
     public class CarAIControl : MonoBehaviour

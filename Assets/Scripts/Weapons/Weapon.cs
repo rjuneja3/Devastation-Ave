@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Player;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -40,28 +39,32 @@ public abstract class Weapon : MonoBehaviour {
         PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
     }
 
-    private void SetAttackFlag() => CanAttack = true;
+        private void SetAttackFlag() => CanAttack = true;
     
-    public void TryAttacking() {
-        if (CanAttack) {
-            CanAttack = false;
-            Invoke("SetAttackFlag", RateOfAttack);
-        } else return;
+        public void TryAttacking() {
+            if (CanAttack) {
+                CanAttack = false;
+                Invoke("SetAttackFlag", RateOfAttack);
+            } else return;
 
-        AudioSource.Play();
+            AudioSource.Play();
 
-        Attack();
-    }
-
-    public virtual void Hit(GameObject o) {
-        OnHit?.Invoke(o);
-        if (o.tag == "Enemy") {
-            var health = o.GetComponent<Health>();
-            health.CurrentAmount -= Math.Abs(Damage);
-            print("Hit enemy!!!");
+            Attack();
         }
 
-        print($"Hit: {o.name} [{o.tag}]");
+        public virtual void Hit(GameObject o) {
+            OnHit?.Invoke(o);
+            if (o.tag == "Enemy") {
+                var health = o.GetComponent<Health>();
+                health.CurrentAmount -= Math.Abs(Damage);
+                print("Hit enemy!!!");
+            }
+
+            print($"Hit: {o.name} [{o.tag}]");
+        }
+
+        public abstract void Attack();
+        #endregion
     }
 
     protected virtual void Update() {

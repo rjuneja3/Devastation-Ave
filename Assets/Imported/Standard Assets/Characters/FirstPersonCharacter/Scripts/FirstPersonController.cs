@@ -1,11 +1,10 @@
-using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
+using Assets.Imported.Standard_Assets.Utility;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
-using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 
 #pragma warning disable 618, 649
-namespace UnityStandardAssets.Characters.FirstPerson
+namespace Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Scripts
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]

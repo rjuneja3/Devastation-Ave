@@ -1,8 +1,7 @@
-using System;
+using Assets.Imported.Standard_Assets.CrossPlatformInput.Scripts;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Characters.ThirdPerson
+namespace Assets.Imported.Standard_Assets.Characters.ThirdPersonCharacter.Scripts
 {
     [RequireComponent(typeof (ThirdPersonCharacter))]
     public class ThirdPersonUserControl : MonoBehaviour

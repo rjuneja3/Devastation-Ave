@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour {
-    #region Exposed Variables
-    public float StartingHealth = 100;
-    public bool DestroyOnDeath = true;
-    #endregion
+namespace Assets.Scripts.Player {
+    public class Health : MonoBehaviour {
+        #region Exposed Variables
+        public float StartingHealth = 100;
+        public bool DestroyOnDeath = true;
+        #endregion
 
     #region Varibles
     private bool TriggeredFinish = false;
@@ -33,18 +32,19 @@ public class Health : MonoBehaviour {
         m_CurrentAmount = StartingHealth;
     }
 
-    void Update() {
-        if (CurrentAmount <= 0 && !TriggeredFinish) {
-            TriggeredFinish = true;
-            HandleDeath();
+        void Update() {
+            if (CurrentAmount <= 0 && !TriggeredFinish) {
+                TriggeredFinish = true;
+                HandleDeath();
+            }
         }
-    }
 
-    void HandleDeath() {
-        OnDeath?.Invoke(gameObject);
-        if (DestroyOnDeath) {
-            Destroy(gameObject);
+        void HandleDeath() {
+            OnDeath?.Invoke(gameObject);
+            if (DestroyOnDeath) {
+                Destroy(gameObject);
+            }
         }
+        #endregion
     }
-    #endregion
 }
