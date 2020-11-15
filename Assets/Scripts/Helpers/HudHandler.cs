@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Helpers;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +34,8 @@ public class HudHandler : MonoBehaviour {
     private void Awake() {
         Self = this;
     }
+
+
 
     private void Start() {
         GetText("DialogText", ref DialogText);

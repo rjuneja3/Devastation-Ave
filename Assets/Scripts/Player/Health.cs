@@ -25,7 +25,7 @@ namespace Assets.Scripts.Player {
         #endregion
 
         #region Methods
-        public event Action<GameObject> OnDeath;
+        public event Action OnDeath;
         public event Action<float, float> OnHealthChange;
 
         void Start() {
@@ -40,7 +40,7 @@ namespace Assets.Scripts.Player {
             }
 
             void HandleDeath() {
-                OnDeath?.Invoke(gameObject);
+                OnDeath?.Invoke();
                 if (DestroyOnDeath) {
                     Destroy(gameObject);
                 }

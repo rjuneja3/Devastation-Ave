@@ -12,7 +12,11 @@ namespace Assets.Scripts.Helpers
         }
 
         public static bool WithinRange(Vector3 u, Vector3 v, float range) {
-            return (u - v).sqrMagnitude <= range * range;
+            return Vector3.SqrMagnitude(u - v) <= range * range;
+        }
+
+        public static bool WithinRange2(Vector3 u, Vector3 v, float range) {
+            return Vector3.Distance(u, v) <= range;
         }
     }
 }

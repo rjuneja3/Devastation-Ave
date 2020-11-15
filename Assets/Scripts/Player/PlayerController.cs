@@ -88,7 +88,7 @@ namespace Assets.Scripts.Player {
             }
         }
 
-        private void OnDeath(GameObject _) {
+        private void OnDeath() {
             Invoke("ReloadScene", 5f);
         }
 

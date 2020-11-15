@@ -128,7 +128,7 @@ namespace Assets.Scripts.Enemy {
             Health.OnDeath += OnDeath;
         }
 
-        private void OnDeath(GameObject _) {
+        private void OnDeath() {
             HudHandler.Points += HunterPointWorth;
         }
 
