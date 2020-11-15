@@ -54,13 +54,11 @@ namespace Assets.Scripts.Factions {
 
 
         public static bool CheckCache(Faction check, Transform @object, out FactionEntity entity, bool add=true) {
-            if (!Self) {
-                entity = null;
-                return false;
-            }
-            foreach (var f in Self.Entities) {
-                if ((f.Key & check) != 0) {
-                    return f.Value.CheckCache(@object, out entity, add);
+            if (Self) {
+                foreach (var f in Self.Entities) {
+                    if ((f.Key & check) != 0) {
+                        return f.Value.CheckCache(@object, out entity, add);
+                    }
                 }
             }
             entity = null;
@@ -88,12 +86,12 @@ namespace Assets.Scripts.Factions {
 
             public void Remove(Transform t) => Entities.Remove(t);
 
-            public bool CheckCache(Transform @object, out FactionEntity entity, bool add=true) {
-                if (Entities.TryGetValue(@object, out entity)) {
+            public bool CheckCache(Transform transform, out FactionEntity entity, bool add=true) {
+                if (Entities.TryGetValue(transform, out entity)) {
                     return true;
                 } else if (add) {
-                    entity = @object.GetComponent<FactionEntity>();
-                    if (entity) Add(@object, entity);
+                    entity = transform.GetComponent<FactionEntity>();
+                    if (entity) Add(transform, entity);
                     return entity;
                 }
                 return false;

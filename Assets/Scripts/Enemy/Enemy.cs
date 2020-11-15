@@ -68,31 +68,49 @@ namespace Assets.Scripts.Enemy {
         }
 
         protected virtual void Start() {
+            // Get required components
             Agent = GetComponent<NavMeshAgent>();
             Health = GetComponent<Health>();
             FactionEntity = GetComponent<FactionEntity>();
 
+            // Append listeners to components
+            FactionEntity.OnTarget += OnTarget;
             Health.OnDeath += OnDeath;
 
-            StartingPoint = transform.position;
-            StateMachine.Start();
+            StartingPoint = transform.position; // Grab entites starting position
+            StateMachine.Start(); // start the State Machine
         }
 
         protected virtual void Update() {
+            // Update current state
             StateMachine.Update();
         }
 
+        /// <summary>
+        /// Called when enemy's health reaches 0
+        /// </summary>
         protected virtual void OnDeath() { }
 
+        /// <summary>
+        /// Called when FactionEntity spots a target
+        /// </summary>
+        /// <param name="newTarget"></param>
+        protected virtual void OnTarget(FactionEntity newTarget) {
+            GetComponent<MeshRenderer>().material.color = Color.green;
+        }
+
         #region State Methods
+
+        // "idle" State methods
         protected virtual void OnIdleEnter() {
             Invoke("StopIdle", 2.5f);
         }
-
+        
         protected virtual void OnIdleStay() { }
 
         protected virtual void OnIdleExit() { }
 
+        // "seek" State methods
         protected virtual void OnSeekEnter() {
             Point = NextPoint();
             LookAt(Point);
@@ -101,13 +119,14 @@ namespace Assets.Scripts.Enemy {
 
         protected virtual void OnSeekStay() {
             if (At(Agent.destination)) {
-                print($"At {Point}... Transitioning");
+                // print($"At {Point}... Transitioning");
                 StateMachine.TransitionTo("idle");
             }
         }
 
         protected virtual void OnSeekExit() { }
 
+        // "attack" State methods
         protected virtual void OnAttackEnter() { }
 
         protected virtual void OnAttackStay() { }
@@ -149,11 +168,11 @@ namespace Assets.Scripts.Enemy {
                     return PatrolPoints[++LastPointIndex % PatrolPoints.Length].position;
                 }
             } else if (Pattern == PatrolPattern.Random) {
-                var vec = VectorHelper.RandomVector3(
+                var v = VectorHelper.RandomVector2(
                     RandomRange.x,
                     RandomRange.y);
 
-                return StartingPoint + vec;
+                return StartingPoint + new Vector3(v.x, 0, v.y);
             }
             return transform.position;
         }

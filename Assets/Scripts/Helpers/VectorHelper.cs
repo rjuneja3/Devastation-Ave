@@ -11,6 +11,13 @@ namespace Assets.Scripts.Helpers
                 Random.Range(min, max));
         }
 
+        public static Vector2 RandomVector2() => RandomVector2(0, 1);
+        public static Vector2 RandomVector2(float min, float max) {
+            return new Vector3(
+                Random.Range(min, max),
+                Random.Range(min, max));
+        }
+
         public static bool WithinRange(Vector3 u, Vector3 v, float range) {
             return Vector3.SqrMagnitude(u - v) <= range * range;
         }
