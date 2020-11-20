@@ -3679,10 +3679,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7049473793581779161}
   - component: {fileID: 3978067997085651619}
-  - component: {fileID: 7376467852384172113}
   - component: {fileID: -4695100534819948575}
   - component: {fileID: -1808786934218909746}
   - component: {fileID: -9178364799666237823}
+  - component: {fileID: 9111659708420516866}
+  - component: {fileID: 4047589781316499083}
   m_Layer: 0
   m_Name: Hunter
   m_TagString: Enemy
@@ -3725,25 +3726,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7376467852384172113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682881189059646051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 631cab1470cd53e4e82b7e84f9671acc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DetectionAngle: 60
-  DetectionRange: 50
-  Power: 40
-  Speed: 0.5
-  LeftHand: {fileID: 0}
-  RightHand: {fileID: 0}
-  Head: {fileID: 4352937696490258087}
 --- !u!195 &-4695100534819948575
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3794,6 +3776,45 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &9111659708420516866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7682881189059646051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d741d172b39afe4d8bff75c7e3f6755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Faction: 2
+  TargetType: 2
+  IsControlled: 0
+  FovAngle: 60
+  DetectionRange: 50
+  HasEyes: 1
+  Hidden: 0
+  Head: {fileID: 4352937696490258087}
+--- !u!114 &4047589781316499083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7682881189059646051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eed3e74d15fa7a409aefcbdc808e1cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FovAngle: 60
+  DetectionRange: 50
+  AtRange: 1
+  Damage: 40
+  Pattern: 1
+  RandomRange: {x: -3, y: 3}
+  PatrolPoints: []
 --- !u!1 &7703266738545729645
 GameObject:
   m_ObjectHideFlags: 0

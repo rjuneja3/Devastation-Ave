@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Factions;
+using System.Collections.Generic;
 using UnityEngine;
 using Action = System.Action;
 
@@ -62,7 +63,7 @@ namespace Assets.Scripts.Weapons
             };
 
             OnShoot?.Invoke();
-
+            FactionManager.ProduceNoise(Faction.Player, NoiseType.GunShot, transform.position);
             BulletQueue.Enqueue(bullet);
             Invoke("DelayBullet", BulletDelay);
         }

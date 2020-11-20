@@ -14,32 +14,51 @@ namespace Assets.Scripts.Factions {
 
         // Don't use as an actual faction
         AllEnemies = Monster | Gov,
-        AllFaction = Player | AllEnemies,
+        All = Player | AllEnemies,
     }
 
     public enum FactionEntityTarget { AlwaysPlayer, Strongest, Nearest }
+
+    public enum SoundSensitivity {
+        None = 0,
+        Low = 1,
+        Normal = 2,
+        High = 3,
+    }
     #endregion
 
     [RequireComponent(typeof(Health))]
     public class FactionEntity : MonoBehaviour {
-        public const int ENTITY_LAYER = 1 << 8; // The layer that all entites reside on
+        public const int ENTITY_LAYER_INDEX = 8;
+        public const int ENTITY_LAYER = 1 << ENTITY_LAYER_INDEX; // The layer that all entites reside on
         public const int LANDSCAPE_LAYER = 1 << 9; // The layer that terrain & buildings reside on
         
         #region Exposed Variables
         public Faction Faction = Faction.Monster;
         public FactionEntityTarget TargetType = FactionEntityTarget.Nearest;
+        public SoundSensitivity Sensitivity = SoundSensitivity.Normal;
         public bool IsControlled = false;
         public float FovAngle = 60f;
         public float DetectionRange = 50f;
+        public bool HasEyes = true;
+        public bool Hidden = false;
         public Transform Head;
         #endregion
 
         #region Variables
         private Collider[] Results = new Collider[10]; // 10 may be too small
+        private bool m_IsRegistered = false;
         #endregion
 
         #region Properties
-        public bool IsRegistered { get; set; }
+        public bool IsRegistered {
+            get => m_IsRegistered;
+            set {
+                m_IsRegistered = value;
+                if (value) OnRegistered?.Invoke();
+                else OnUnregistered?.Invoke();
+            }
+        }
         public bool IsSearching { get; set; }
         public FactionEntity Target { get; private set; }
         public Health Health { get; private set; }
@@ -52,11 +71,28 @@ namespace Assets.Scripts.Factions {
         /// Called when the entity aquires a new target
         /// </summary>
         public event Action<FactionEntity> OnTarget;
-
+        public event Action<Vector3, float> OnNoise;
+        public event Action OnRegistered;
+        public event Action OnUnregistered;
+        
         private void Start() {
             Health = GetComponent<Health>();
-            FactionManager.Register(this);
+
             Health.OnDeath += OnDeath;
+
+            FactionManager.Register(this);
+        }
+
+        public void ListenForNoise(Faction faction, NoiseType noise, Vector3 position) {
+            if (faction == Faction) return;
+
+            // TODO: tweek formula
+            int s = 2 << (int)Sensitivity;
+            s += ((int)noise * 20);
+
+            if (VectorHelper.WithinRange(Position, position, s)) {
+                OnNoise?.Invoke(position, 1f);
+            }
         }
 
         private void Update() {
@@ -71,14 +107,6 @@ namespace Assets.Scripts.Factions {
 
         private void OnDisable() {
             FactionManager.Unregister(this);
-        }
-
-        public void Search(FactionEntity entity) {
-            if (InRange(entity.transform)) {
-                if (InFov(entity.transform)) {
-                    
-                }
-            }
         }
 
         /// <summary>
@@ -148,7 +176,7 @@ namespace Assets.Scripts.Factions {
 
         private bool GetAssociatedEntity(Collider c, out FactionEntity entity) {
             if (c.gameObject.tag == "Player") {
-                return FactionManager.CheckCache(Faction, c.transform, out entity);
+                return FactionManager.CheckCache(Faction.Player, c.transform, out entity, false);
             } else if (c.gameObject.tag == "Enemy") {
                 // Ensures it's not getting any enemies of the same faction by flipping the bit
                 Faction faction = this.Faction ^ Faction.AllEnemies;
@@ -167,13 +195,34 @@ namespace Assets.Scripts.Factions {
         /// <param name="entity"></param>
         private void EntityIsVisible(Collider c, FactionEntity entity) {
             if (InFov(c.transform) && DirectLineOfSight(c.transform)) {
-                Target = entity;
-                OnTarget?.Invoke(Target);
+                SetTarget(entity);
             }
         }
 
+        public void SetTarget(FactionEntity entity) {
+            if (HasTarget) {
+                Target.Health.OnDeath -= OnTargetDeath;
+            }
+            Target = entity;
+            if (entity && entity.Health) entity.Health.OnDeath += OnTargetDeath;
+            OnTarget?.Invoke(Target);
+            print($"{this} set target {Target}");
+        }
+
+        private void OnTargetDeath() {
+            if (!Target.Health.IsDead) return;
+            print("Target is Dead");
+            SetTarget(null);
+        }
+
         private void OnDeath() {
+            for (int i = 0; i < 30; i++)
+            print($"ON DEATH {name}");
             FactionManager.Unregister(this);
+        }
+
+        public override string ToString() {
+            return $"[FACTION ENTITY: {name} ({Faction})]";
         }
         #endregion
     }

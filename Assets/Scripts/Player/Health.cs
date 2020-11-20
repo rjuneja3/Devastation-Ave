@@ -10,41 +10,49 @@ namespace Assets.Scripts.Player {
 
         #region Varibles
         private bool TriggeredFinish = false;
-        private float m_CurrentAmount = 0;
+        private float m_CurrentHP = 0;
         #endregion
 
         #region Properties
-        public float CurrentAmount {
-            get => m_CurrentAmount;
+        public float CurrentHP {
+            get => m_CurrentHP;
             set {
-                var prev = m_CurrentAmount;
-                m_CurrentAmount = Mathf.Clamp(value, 0, StartingHealth);
-                OnHealthChange?.Invoke(prev, m_CurrentAmount);
+                var prev = m_CurrentHP;
+                m_CurrentHP = Mathf.Clamp(value, 0, StartingHealth);
+                OnHealthChange?.Invoke(prev, m_CurrentHP);
+                DeathCheck();
             }
         }
+
+        public bool IsDead => CurrentHP == 0;
         #endregion
 
         #region Methods
         public event Action OnDeath;
         public event Action<float, float> OnHealthChange;
 
-        void Start() {
-            m_CurrentAmount = StartingHealth;
+        private void Start() {
+            Resurrect();
         }
 
-            void Update() {
-                if (CurrentAmount <= 0 && !TriggeredFinish) {
-                    TriggeredFinish = true;
-                    HandleDeath();
-                }
+        private void DeathCheck() {
+            if (CurrentHP <= 0 && !TriggeredFinish) {
+                TriggeredFinish = true;
+                HandleDeath();
             }
+        }
 
-            void HandleDeath() {
-                OnDeath?.Invoke();
-                if (DestroyOnDeath) {
-                    Destroy(gameObject);
-                }
+        private void HandleDeath() {
+            OnDeath?.Invoke();
+            if (DestroyOnDeath) {
+                Destroy(gameObject);
             }
-            #endregion
+        }
+
+        public void Resurrect() {
+            CurrentHP = StartingHealth;
+            TriggeredFinish = false;
+        }
+        #endregion
     }
 }

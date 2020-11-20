@@ -38,7 +38,7 @@ namespace Assets.Scripts.Weapons {
         protected virtual void Start() {
             AudioSource = GetComponent<AudioSource>();
             Utils.FindPlayer(ref Player);
-            PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
+            if (Player) PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
         }
 
         private void SetAttackFlag() => CanAttack = true;
@@ -58,7 +58,7 @@ namespace Assets.Scripts.Weapons {
             OnHit?.Invoke(o);
             if (o.tag == "Enemy") {
                 var health = o.GetComponent<Health>();
-                health.CurrentAmount -= Math.Abs(Damage);
+                health.CurrentHP -= Math.Abs(Damage);
                 print("Hit enemy!!!");
             }
 

@@ -4,13 +4,15 @@ using UnityEngine;
 using System;
 
 namespace Assets.Scripts.Factions {
+
+    public enum NoiseType { Walking, GunShot }
+
     public class FactionManager : MonoBehaviour {
         #region Exposed Variables
         #endregion
 
         #region Variables
         private Dictionary<Faction, FactionEntities> Entities;
-        private List<FactionEntity> ScheduledForSearch;
         #endregion
 
         #region Properties
@@ -18,46 +20,50 @@ namespace Assets.Scripts.Factions {
         #endregion
 
         #region Methods
+        public static event Action<Faction, NoiseType, Vector3> ListenForNoise;
 
         private void Awake() {
             Self = this;
             Entities = new Dictionary<Faction, FactionEntities>() {
-                { Faction.Player, new FactionEntities() },
-                { Faction.Monster, new FactionEntities() },
-                { Faction.Gov, new FactionEntities() }
+                { Faction.Player, new FactionEntities(Faction.Player) },
+                { Faction.Monster, new FactionEntities(Faction.Monster) },
+                { Faction.Gov, new FactionEntities(Faction.Gov) }
             };
-
-            ScheduledForSearch = new List<FactionEntity>();
+            
         }
 
-        private void Start() { }
-
-        private void Update() { }
+        // private void Start() { }
+        // private void Update() { }
 
         public static void Register(FactionEntity entity) {
-            if (!Self) return;
             if (Self && !entity.IsRegistered) {
-                entity.IsRegistered = true;
                 Self.Entities[entity.Faction].Add(entity);
+                if (entity.Sensitivity != SoundSensitivity.None) {
+                    ListenForNoise += entity.ListenForNoise;
+                }
+                entity.IsRegistered = true;
             }
         }
 
         public static void Unregister(FactionEntity entity) {
-            if (!Self) return;
-            entity.IsRegistered = false;
             Self.Entities[entity.Faction].Remove(entity.transform);
+            if (entity.Sensitivity != SoundSensitivity.None) {
+                ListenForNoise -= entity.ListenForNoise;
+            }
+            entity.IsRegistered = false;
+        }
+        
+        public static void ProduceNoise(Faction faction, NoiseType noise, Vector3 position) {
+            ListenForNoise?.Invoke(faction, noise, position);
         }
 
-        public static void ScheduleForSearch(FactionEntity entity) {
-
-        }
-
-
-        public static bool CheckCache(Faction check, Transform @object, out FactionEntity entity, bool add=true) {
+        public static bool CheckCache(Faction check, Transform @object, out FactionEntity entity, bool add = true) {
             if (Self) {
                 foreach (var f in Self.Entities) {
                     if ((f.Key & check) != 0) {
-                        return f.Value.CheckCache(@object, out entity, add);
+                        if (f.Value.CheckCache(@object, out entity, add)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -65,37 +71,67 @@ namespace Assets.Scripts.Factions {
             return false;
         }
 
-
+        public static FactionEntity RawGet(Faction f, Transform key) {
+            if (Self.Entities[f].TryGetValue(key, out var value)) {
+                print($"TRY GET WORKS: {value}");
+                return value;
+            }
+            return null;
+        }
         #endregion
 
         #region Faction Entities Class
         class FactionEntities : IEnumerable<KeyValuePair<Transform, FactionEntity>> {
+            public readonly Faction Faction;
             private Dictionary<Transform, FactionEntity> Entities;
 
             public FactionEntity this[Transform key] {
                 get => Entities[key];
                 set => Entities[key] = value;
             }
-            
-            public FactionEntities() {
+
+            public FactionEntities(Faction faction) {
+                Faction = faction;
                 Entities = new Dictionary<Transform, FactionEntity>();
             }
 
-            public void Add(Transform t, FactionEntity e) => Entities.Add(t, e);
+            public void Add(Transform t, FactionEntity e) {
+                print($"Added {t.name} to {Faction} ({t}, {e})");
+                Entities.Add(t, e);
+
+            }
             public void Add(FactionEntity e) => Add(e.transform, e);
 
-            public void Remove(Transform t) => Entities.Remove(t);
+            public void Remove(Transform t) {
+                if (Entities.Remove(t)) {
+                    print($"Removed {t.name} ({t}) from {Faction}");
+                } else {
+                    print($"Was NOT able to remove {t.name} ({t}) from {Faction}");
+                }
+            }
 
-            public bool CheckCache(Transform transform, out FactionEntity entity, bool add=true) {
-                if (Entities.TryGetValue(transform, out entity)) {
+            public bool CheckCache(Transform t, out FactionEntity entity, bool add = true) {
+                if (Entities.TryGetValue(t, out entity)) {
+                    if (entity.Hidden) {
+                        entity = null;
+                        return false;
+                    }
                     return true;
                 } else if (add) {
-                    entity = transform.GetComponent<FactionEntity>();
-                    if (entity) Add(transform, entity);
+                    entity = t.GetComponent<FactionEntity>();
+                    if (entity) {
+                        if (entity.Hidden) {
+                            entity = null;
+                        } else if (entity.Faction == Faction) {
+                            Add(t, entity);
+                        }
+                    }
                     return entity;
                 }
                 return false;
             }
+
+            public bool TryGetValue(Transform key, out FactionEntity value) => Entities.TryGetValue(key, out value);
 
             public IEnumerator<KeyValuePair<Transform, FactionEntity>> GetEnumerator() {
                 return Entities.GetEnumerator();

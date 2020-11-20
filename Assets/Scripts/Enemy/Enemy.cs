@@ -9,26 +9,29 @@ using UnityEngine.AI;
 namespace Assets.Scripts.Enemy {
     #region Enemy Enums
     public enum PatrolPattern { None, Random, Ordered }
-    public enum EnemyState { Idle, Seek, Attack }
     #endregion
 
     // [RequireComponent(typeof(AudioSource))]
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(NavMeshAgent))]
-    //[RequireComponent(typeof(FactionEntity))]
-    public class Enemy : MonoBehaviour {
+    [RequireComponent(typeof(FactionEntity))]
+    // [RequireComponent(typeof(Animator))]
+    public abstract class Enemy : MonoBehaviour {
         #region Exposed Variables
-        public PatrolPattern Pattern = PatrolPattern.Random;
-        public Vector2 RandomRange;
         public float FovAngle = 60f;
         public float DetectionRange = 50f;
+        public float AtRange = 1f;
+        public float Damage = 10f;
+        public PatrolPattern Pattern = PatrolPattern.Random;
+        public Vector2 RandomRange;
         public Transform[] PatrolPoints;
         #endregion
 
         #region Variables
         protected NavMeshAgent Agent;
         protected Health Health;
-        protected FactionEntity FactionEntity;
+        protected Animator Animator;
+        protected FactionEntity Entity;
         protected StateMachine StateMachine;
         private Vector3 Point, StartingPoint;
         private int LastPointIndex = -1;
@@ -39,6 +42,7 @@ namespace Assets.Scripts.Enemy {
             get => transform.position;
             set => transform.position = value;
         }
+        public virtual bool IsAttacking { get; protected set; }
         #endregion
 
         #region Methods
@@ -71,10 +75,11 @@ namespace Assets.Scripts.Enemy {
             // Get required components
             Agent = GetComponent<NavMeshAgent>();
             Health = GetComponent<Health>();
-            FactionEntity = GetComponent<FactionEntity>();
+            Entity = GetComponent<FactionEntity>();
+            Animator = GetComponent<Animator>();
 
             // Append listeners to components
-            FactionEntity.OnTarget += OnTarget;
+            Entity.OnTarget += OnTarget;
             Health.OnDeath += OnDeath;
 
             StartingPoint = transform.position; // Grab entites starting position
@@ -95,15 +100,15 @@ namespace Assets.Scripts.Enemy {
         /// Called when FactionEntity spots a target
         /// </summary>
         /// <param name="newTarget"></param>
-        protected virtual void OnTarget(FactionEntity newTarget) {
-            GetComponent<MeshRenderer>().material.color = Color.green;
-        }
+        protected abstract void OnTarget(FactionEntity newTarget);
 
         #region State Methods
 
         // "idle" State methods
         protected virtual void OnIdleEnter() {
-            Invoke("StopIdle", 2.5f);
+            if (Pattern != PatrolPattern.None) {
+                Invoke("StopIdle", 2.5f);
+            }
         }
         
         protected virtual void OnIdleStay() { }
@@ -124,14 +129,20 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
-        protected virtual void OnSeekExit() { }
+        protected virtual void OnSeekExit() {
+            Stop();
+        }
 
         // "attack" State methods
-        protected virtual void OnAttackEnter() { }
+        protected virtual void OnAttackEnter() {
+            IsAttacking = true;
+        }
 
         protected virtual void OnAttackStay() { }
 
-        protected virtual void OnAttackExit() { }
+        protected virtual void OnAttackExit() {
+            IsAttacking = false;
+        }
 
         private void StopIdle() {
             if (StateMachine.CurrentState.Name == "idle") {
@@ -141,15 +152,24 @@ namespace Assets.Scripts.Enemy {
         #endregion
 
         protected void LookAt(Vector3 target) {
-            if (target != Vector3.zero) {
+            if (!At(target)) {
                 var dir = target - transform.position;
                 dir.y = 0; // Either set to 0 or position.y
                 transform.rotation = Quaternion.LookRotation(dir);
             }
         }
 
+        protected void LookAndSetDestination(Vector3 destination) {
+            LookAt(destination);
+            Agent.SetDestination(destination);
+        }
+
         public bool At(Vector3 destination) {
-            return VectorHelper.WithinRange(Position, destination, 1f);
+            return VectorHelper.WithinRange(Position, destination, AtRange);
+        }
+
+        public void Stop() {
+            Agent.SetDestination(Position);
         }
 
         public virtual bool InFov(Transform @object) {

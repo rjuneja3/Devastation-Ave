@@ -249,7 +249,7 @@ namespace Assets.Scripts.Enemy {
         private void OnHitBoxCollide(GameObject o) {
             if (IsAttacking && o.tag == "Player") {
                 var health = o.GetComponent<Health>();
-                if (health) health.CurrentAmount -= Power;
+                if (health) health.CurrentHP -= Power;
                 print($"Hit player!!! [deduction: {!!health}]");
             } else {
                 print($"HIT: {o.gameObject.name} [{o.gameObject.tag}]");
