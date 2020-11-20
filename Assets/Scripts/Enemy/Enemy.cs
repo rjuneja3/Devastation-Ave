@@ -33,7 +33,8 @@ namespace Assets.Scripts.Enemy {
         protected Animator Animator;
         protected FactionEntity Entity;
         protected StateMachine StateMachine;
-        private Vector3 Point, StartingPoint;
+        protected Vector3 Point;
+        private Vector3 StartingPoint;
         private int LastPointIndex = -1;
         #endregion
 
@@ -118,8 +119,7 @@ namespace Assets.Scripts.Enemy {
         // "seek" State methods
         protected virtual void OnSeekEnter() {
             Point = NextPoint();
-            LookAt(Point);
-            Agent.SetDestination(Point);
+            LookAndSetDestination(Point);
         }
 
         protected virtual void OnSeekStay() {

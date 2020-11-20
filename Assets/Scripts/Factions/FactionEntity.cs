@@ -81,6 +81,10 @@ namespace Assets.Scripts.Factions {
             Health.OnDeath += OnDeath;
 
             FactionManager.Register(this);
+
+            if (gameObject.layer != ENTITY_LAYER_INDEX) {
+                Debug.LogWarning($"{this} is not on the 'Entity' layer.");
+            }
         }
 
         public void ListenForNoise(Faction faction, NoiseType noise, Vector3 position) {
@@ -166,12 +170,17 @@ namespace Assets.Scripts.Factions {
                 // Gets associated entity with the collider
                 if (GetAssociatedEntity(Results[i], out var entity)) {
                     // Checks if the entity is visible, ands updates the target
-                    EntityIsVisible(Results[i], entity);
+                    if (HasEyes) {
+                        EntityIsVisible(Results[i], entity);
+                    } else {
+                        SetTarget(entity);
+                    }
 
                     // no need to continue; we have a target
                     if (HasTarget) break;
                 }
             }
+            
         }
 
         private bool GetAssociatedEntity(Collider c, out FactionEntity entity) {
@@ -216,8 +225,6 @@ namespace Assets.Scripts.Factions {
         }
 
         private void OnDeath() {
-            for (int i = 0; i < 30; i++)
-            print($"ON DEATH {name}");
             FactionManager.Unregister(this);
         }
 

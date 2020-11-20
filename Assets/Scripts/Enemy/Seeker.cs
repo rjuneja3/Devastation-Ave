@@ -39,6 +39,8 @@ namespace Assets.Scripts.Enemy {
             foreach (var h in hitboxes) {
                 h.OnCollide += OnHitBoxCollide;
             }
+
+            Entity.OnNoise += OnNoise;
         }
 
         protected override void Update() {
@@ -47,18 +49,27 @@ namespace Assets.Scripts.Enemy {
 
         protected override void OnTarget(FactionEntity newTarget) {
             if (!newTarget) {
+                ZSpeed = 2f;
                 StateMachine.TransitionTo("seek");
             }
         }
 
         #region State Methods
+        protected override void OnIdleEnter() {
+            ZSpeed = 0;
+        }
+
+        protected override void OnIdleExit() {
+            base.OnIdleExit();
+        }
+
         protected override void OnSeekEnter() {
             if (Entity.HasTarget) {
                 LookAndSetDestination(Entity.Target.Position);
-                ZSpeed = 3f;
+                ZSpeed = 2f;
             } else {
-                base.OnSeekEnter();
-                ZSpeed = 3f;
+                LookAndSetDestination(Point);
+                ZSpeed = 1f;
             }
         }
 
@@ -100,6 +111,13 @@ namespace Assets.Scripts.Enemy {
                 if (FactionManager.CheckCache(check, o.transform, out var entity, true)) {
                     entity.Health.CurrentHP -= Damage;
                 }
+            }
+        }
+
+        private void OnNoise(Vector3 origin, float strenth) {
+            if (StateMachine.CurrentState.Name == "idle") {
+                Point = origin;
+                StateMachine.TransitionTo("seek");
             }
         }
         #endregion

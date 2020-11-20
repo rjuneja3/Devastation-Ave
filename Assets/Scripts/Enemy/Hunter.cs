@@ -95,11 +95,12 @@ namespace Assets.Scripts.Enemy {
         }
         #endregion
 
+        // TODO: fix hits on other enemies
         private void OnHitBoxCollide(GameObject o) {
-            //string msg = $"OnHitBoxCollide:\n\tIsAttacking: {IsAttacking}, Oject Layer: {o.layer}\n\t";
             if (IsAttacking && o.layer == FactionEntity.ENTITY_LAYER_INDEX) {
                 var check = Faction.All ^ Entity.Faction;
-                if (FactionManager.CheckCache(check, o.transform, out var entity, true)) {
+                print($"{name} is attacking {o.name}");
+                if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {
                     entity.Health.CurrentHP -= Damage;
                 }
             }
