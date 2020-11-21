@@ -34,6 +34,12 @@ namespace Assets.Scripts.Enemy {
         #region Methods
         protected override void Start() {
             base.Start();
+
+            // Resets layer positions
+            int @base = Animator.GetLayerIndex("Base"),
+                firearm = Animator.GetLayerIndex("Firearm");
+            Animator.SetLayerWeight(@base, 0f);
+            Animator.SetLayerWeight(firearm, 1f);
         }
 
         protected override void Update() {

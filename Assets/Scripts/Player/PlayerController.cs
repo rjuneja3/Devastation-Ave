@@ -11,12 +11,6 @@ namespace Assets.Scripts.Player {
     public class PlayerController : MonoBehaviour {
         const float GET_VOLUME_FROM_MIXER = .5f;
 
-        public enum Layer {
-            Base = 1,
-            Firearm = 2,
-            Melee = 3,
-        }
-
         #region Exposed Variables
         public float Speed = 5f;
         public float SprintSpeed = 20f;
@@ -44,31 +38,7 @@ namespace Assets.Scripts.Player {
         public bool IsGrounded => CharacterController.isGrounded;
         #endregion
 
-        private bool t_EquipMelee = false;
-        public bool T_EquipMelee {
-            get => t_EquipMelee;
-            set {
-                t_EquipMelee = value;
-                ActivateLayer(value ? Layer.Firearm : Layer.Base);
-                print($"EquipedFirearm {value}");
-            }
-        }
-
         #region Methods
-        public void ActivateLayer(Layer layer) {
-
-            void set(Layer a, float w) {
-                var s = a.ToString("G");
-                int i = Animator.GetLayerIndex(s);
-                Animator.SetLayerWeight(i, w);
-            }
-
-            if (layer != Layer.Base) set(Layer.Base, 0);
-            if (layer != Layer.Firearm) set(Layer.Firearm, 0);
-            if (layer != Layer.Melee) set(Layer.Melee, 0);
-
-            set(layer, 1f);
-        }
 
         void Start() {
             //MouseLook.Init(transform, Camera.main.transform);

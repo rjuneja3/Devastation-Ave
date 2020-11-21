@@ -69,7 +69,7 @@ namespace Assets.Scripts.Weapons {
             if (IsPickedUp) return;
 
             if (CheckPrompt() && Input.GetKeyDown(KeyCode.E)) {
-                PlayerWeaponHandler.PickUp(gameObject);
+                PlayerWeaponHandler.Equip(gameObject);
             }
         }
 
