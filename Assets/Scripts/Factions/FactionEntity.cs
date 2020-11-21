@@ -154,6 +154,8 @@ namespace Assets.Scripts.Factions {
                 : false;
         }
 
+        public bool DirectLineOfSight(FactionEntity entity) => DirectLineOfSight(entity.transform);
+
         /// <summary>
         /// Sweeps through entities and 
         /// TODO: Try optimizing method a bit more
