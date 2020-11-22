@@ -3743,6 +3743,7 @@ MonoBehaviour:
   Speed: 0.5
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
+  Head: {fileID: 4352937696490258087}
 --- !u!195 &-4695100534819948575
 NavMeshAgent:
   m_ObjectHideFlags: 0

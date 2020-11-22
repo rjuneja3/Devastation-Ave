@@ -8,6 +8,7 @@ namespace Assets.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Health))]
     public class PlayerController : MonoBehaviour {
+        const float GET_VOLUME_FROM_MIXER = .5f;
 
         public enum Layer {
             Base = 1,
@@ -19,9 +20,12 @@ namespace Assets.Scripts.Player {
         public float Speed = 5f;
         public float SprintSpeed = 20f;
         public float JumpHeight = 5f;
+        public AudioClip HurtSound;
+        public Transform Torso;
         #endregion
 
         #region Variables
+        private AudioSource Audio;
         private CharacterController CharacterController;
         private Rigidbody Rigidbody;
         private Animator Animator;
@@ -67,6 +71,7 @@ namespace Assets.Scripts.Player {
 
         void Start() {
             //MouseLook.Init(transform, Camera.main.transform);
+            Audio = GetComponent<AudioSource>();
             CharacterController = GetComponent<CharacterController>();
             Animator = GetComponent<Animator>();
             Health = GetComponent<Health>();
@@ -78,6 +83,9 @@ namespace Assets.Scripts.Player {
 
         private void OnHealthChange(float prevAmount, float currentAmount) {
             print($"Health Decrease: {prevAmount} -> {currentAmount}");
+            if (currentAmount < prevAmount) {
+                Audio.PlayOneShot(HurtSound, GET_VOLUME_FROM_MIXER);
+            }
         }
 
         private void OnDeath(GameObject _) {

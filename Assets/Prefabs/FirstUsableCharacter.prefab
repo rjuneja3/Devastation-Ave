@@ -322,7 +322,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1.9
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!82 &8807116310363283849
 AudioSource:
   m_ObjectHideFlags: 0
@@ -434,6 +434,8 @@ MonoBehaviour:
   Speed: 2
   SprintSpeed: 10
   JumpHeight: 10
+  HurtSound: {fileID: 8300000, guid: 32fb456438c20294a8ee41ecb9a81a02, type: 3}
+  Torso: {fileID: 8807116310429218265}
 --- !u!114 &8807116310363283854
 MonoBehaviour:
   m_ObjectHideFlags: 0
