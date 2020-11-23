@@ -15,7 +15,7 @@ namespace Assets.Scripts.Weapons {
 
         #region Variables
         private const float pickupDistance = 1.5f;
-        protected bool CanAttack = true;
+
         protected AudioSource AudioSource;
         protected Transform Player;
         private bool m_IsPrompting = false, m_IsPickedUp = false;
@@ -23,6 +23,8 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Properties
+        protected virtual bool CanAttack { get; set; }
+
         public WeaponHandler CurrentHandler { get; private set; }
         public bool IsPickedUp {
             get => CurrentHandler;
@@ -38,8 +40,9 @@ namespace Assets.Scripts.Weapons {
 
         protected virtual void Start() {
             AudioSource = GetComponent<AudioSource>();
-            Utils.FindPlayer(ref Player);
-            if (Player) PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
+            if (Utils.FindPlayer(ref Player)) {
+                PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
+            }
         }
 
         public virtual void AttachToHandler(WeaponHandler handler) {

@@ -1,10 +1,10 @@
 ﻿using Assets.Scripts.Factions;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Action = System.Action;
+using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Weapons
-{
+namespace Assets.Scripts.Weapons {
     public class Firearm : Weapon {
         public const float BulletDelay = 4f / 60f; // ~4 frames. Call of Duty does this.
 
@@ -19,10 +19,15 @@ namespace Assets.Scripts.Weapons
         private Queue<Bullet> BulletQueue = new Queue<Bullet>();
         private GameObject ShootPoint;
         private Light ShootPointLight;
+        private uint CurrentMag = 0;
         #endregion
 
         #region Properties
         public float CurrentAdsRatio { get; private set; }
+        protected override bool CanAttack {
+            get => base.CanAttack && CurrentMag > 0;
+            set => base.CanAttack = value;
+        }
         #endregion
 
         #region Methods
@@ -38,6 +43,14 @@ namespace Assets.Scripts.Weapons
                 ShootPoint = sp.gameObject;
                 ShootPointLight = sp.GetComponent<Light>();
             }
+            RefillMag();
+        }
+
+        private void RefillMag() {
+            uint amount = MagSize - CurrentMag;
+            uint take = Math.Min(Ammo, amount);
+            CurrentMag += take;
+            Ammo -= take;
         }
 
         private void MuzzleFlash() {
@@ -56,6 +69,8 @@ namespace Assets.Scripts.Weapons
                 Accuracy = CurrentAdsRatio * HipFireRadius
             };
 
+            CurrentMag--;
+
             MuzzleFlash();
             if (CurrentHandler) {
                 CurrentHandler.OnShoot();
@@ -66,12 +81,13 @@ namespace Assets.Scripts.Weapons
         }
 
         private void DelayBullet() {
+            const int layer = FactionEntity.LANDSCAPE_AND_ENTITIES;
             Bullet b = BulletQueue.Dequeue();
 
             if (b.Accuracy != 0f)
                 RoughDirection(ref b.Direction, b.Accuracy);
 
-            if (Physics.Raycast(b.Origin, b.Direction, out var hit, Range)) {
+            if (Physics.Raycast(b.Origin, b.Direction, out var hit, Range, layer)) {
                 Hit(hit.collider.gameObject);
 
                 if (DebugMode)

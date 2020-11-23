@@ -32,6 +32,9 @@ namespace Assets.Scripts.Factions {
         public const int ENTITY_LAYER_INDEX = 8;
         public const int ENTITY_LAYER = 1 << ENTITY_LAYER_INDEX; // The layer that all entites reside on
         public const int LANDSCAPE_LAYER = 1 << 9; // The layer that terrain & buildings reside on
+
+        // Combines Landscape and entity layers
+        public const int LANDSCAPE_AND_ENTITIES = ENTITY_LAYER | LANDSCAPE_LAYER;
         
         #region Exposed Variables
         public Faction Faction = Faction.Monster;
@@ -143,13 +146,11 @@ namespace Assets.Scripts.Factions {
         /// <param name="object">The object to check</param>
         /// <returns>If the entity has a direct line of site</returns>
         public bool DirectLineOfSight(Transform @object) {
-            const int layer = LANDSCAPE_LAYER | ENTITY_LAYER; // Combines Landscape and entity layers
-
             Vector3 to = @object.position + Vector3.up; // TODO: make sure ray hits y-center of object
             Ray ray = new Ray(Head.position, to - Head.position); // creates a ray from the entity's head
 
             // Casts a Sphere towards the entity and checks if it hit
-            return Physics.SphereCast(ray, .25f, out var hit, DetectionRange, layer)
+            return Physics.SphereCast(ray, .25f, out var hit, DetectionRange, LANDSCAPE_AND_ENTITIES)
                 ? hit.transform == @object
                 : false;
         }
