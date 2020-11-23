@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Player;
 using UnityEngine;
 using System;
+using Assets.Scripts.Factions;
 
 namespace Assets.Scripts.Weapons {
     #region Weapon Enums
@@ -12,7 +13,8 @@ namespace Assets.Scripts.Weapons {
     #endregion
 
     [RequireComponent(typeof(Animator))]
-    public class WeaponHandler : MonoBehaviour {
+    [RequireComponent(typeof(FactionEntity))]
+    public abstract class WeaponHandler : MonoBehaviour {
         protected static readonly Vector3 FirearmPosition = new Vector3(0.241f, -0.03f, 0.019f);
         protected static readonly Vector3 FirearmEulerRotation = new Vector3(-0.365f, 94.091f, 90.735f);
 
@@ -28,44 +30,38 @@ namespace Assets.Scripts.Weapons {
         #region Properties
         public Weapon CurrentWeapon { get; protected set; } = null;
         public bool HasWeapon => CurrentWeapon;
+        public abstract Vector3 BulletOrigin { get; }
+        public abstract Vector3 BulletDirection { get; }
+        public FactionEntity Entity { get; private set; }
         #endregion
 
         #region Methods
         protected virtual void Start() {
             Animator = GetComponent<Animator>();
+            Entity = GetComponent<FactionEntity>();
             if (Weapon) Equip(Weapon);
         }
 
-        protected virtual void Update() {
-            /*if (Fire1 && CurrentWeapon) {
-                CurrentWeapon.TryAttacking();
-            }*/
-        }
+        protected virtual void Update() { }
 
-        public virtual bool Equip(GameObject weapon) {
-            Weapon Weapon;
+        public virtual bool Equip(GameObject weaponObject) {
+            
+            Weapon weapon;
             try {
-                Weapon = weapon.GetComponent<Weapon>();
-                if (!Weapon) return false;
+                weapon = weaponObject.GetComponent<Weapon>();
+                if (!weapon) return false;
             } catch { return false; }
 
-            if (HasWeapon) {
-                if (CurrentWeapon is Firearm a) {
-                    a.OnShoot -= OnShoot;
-                }
-                CurrentWeapon.gameObject.transform.SetParent(null);
-                CurrentWeapon.IsPickedUp = false;
-            }
-            CurrentWeapon = Weapon;
-            weapon.transform.SetParent(RightHand);
-            ActivateLayer(Layer.Firearm);
-            CurrentWeapon.IsPickedUp = true;
-            weapon.transform.localPosition = FirearmPosition;
-            weapon.transform.localEulerAngles = FirearmEulerRotation;
+            CurrentWeapon?.AttachToHandler(null); // removes old Weapon from entity
+            weapon.AttachToHandler(this); // Appends new weapon to entity
+            weaponObject.transform.localPosition = FirearmPosition;
+            weaponObject.transform.localEulerAngles = FirearmEulerRotation;
 
-            if (Weapon is Firearm f) {
-                f.OnShoot += OnShoot;
-            }
+            ActivateLayer(weapon is Firearm
+                ? Layer.Firearm : Layer.Base);
+
+            Weapon = weaponObject;
+            CurrentWeapon = weapon;
             return true;
         }
 
@@ -82,8 +78,9 @@ namespace Assets.Scripts.Weapons {
             // set(Layer.Melee);
         }
 
-        protected virtual void OnShoot() {
-        }
+        public virtual void OnShoot() { }
+
+        public virtual void OnHit(GameObject o) { }
         #endregion
     }
 }

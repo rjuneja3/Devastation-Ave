@@ -227,6 +227,9 @@ namespace Assets.Scripts.Factions {
         }
 
         private void OnDeath() {
+            if (HasTarget) {
+                Target.Health.OnDeath -= OnTargetDeath;
+            }
             FactionManager.Unregister(this);
         }
 

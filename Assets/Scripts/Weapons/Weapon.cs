@@ -23,8 +23,9 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Properties
+        public WeaponHandler CurrentHandler { get; private set; }
         public bool IsPickedUp {
-            get => m_IsPickedUp;
+            get => CurrentHandler;
             set {
                 m_IsPickedUp = value;
                 m_IsPrompting = false;
@@ -41,6 +42,11 @@ namespace Assets.Scripts.Weapons {
             if (Player) PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
         }
 
+        public virtual void AttachToHandler(WeaponHandler handler) {
+            transform.SetParent(handler?.RightHand);
+            CurrentHandler = handler;
+        }
+
         private void SetAttackFlag() => CanAttack = true;
 
         public void TryAttacking() {
@@ -55,14 +61,8 @@ namespace Assets.Scripts.Weapons {
         }
 
         public virtual void Hit(GameObject o) {
+            CurrentHandler?.OnHit(o);
             OnHit?.Invoke(o);
-            if (o.tag == "Enemy") {
-                var health = o.GetComponent<Health>();
-                health.CurrentHP -= Math.Abs(Damage);
-                print("Hit enemy!!!");
-            }
-
-            print($"Hit: {o.name} [{o.tag}]");
         }
 
         protected virtual void Update() {

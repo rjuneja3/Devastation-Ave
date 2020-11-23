@@ -39,7 +39,7 @@ namespace Assets.Scripts.Enemy {
         #endregion
 
         #region Properties
-        public Vector3 Position {
+        public Vector3 Position1 {
             get => transform.position;
             set => transform.position = value;
         }
@@ -165,11 +165,14 @@ namespace Assets.Scripts.Enemy {
         }
 
         public bool At(Vector3 destination) {
-            return VectorHelper.WithinRange(Position, destination, AtRange);
+            return VectorHelper.WithinRange(transform.position, destination, AtRange);
         }
 
         public void Stop() {
-            Agent.SetDestination(Position);
+            // Fixes random null reference error
+            if (this) {
+                Agent.SetDestination(transform.position);
+            }
         }
 
         public virtual bool InFov(Transform @object) {
@@ -179,7 +182,7 @@ namespace Assets.Scripts.Enemy {
         }
 
         public virtual bool InRange(Transform @object) {
-            return VectorHelper.WithinRange(Position, @object.position, DetectionRange);
+            return VectorHelper.WithinRange(transform.position, @object.position, DetectionRange);
         }
 
         private Vector3 NextPoint() {

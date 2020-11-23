@@ -26,7 +26,6 @@ namespace Assets.Scripts.Weapons
         #endregion
 
         #region Methods
-        public event Action OnShoot;
         /// <param name="ratio">0.0 means they are aiming, 1.0 means they are not aiming</param>
         public void SetAdsRatio(float ratio) {
             CurrentAdsRatio = Mathf.Clamp01(ratio);
@@ -38,7 +37,6 @@ namespace Assets.Scripts.Weapons
             if (sp) {
                 ShootPoint = sp.gameObject;
                 ShootPointLight = sp.GetComponent<Light>();
-                if (ShootPointLight) OnShoot += MuzzleFlash;
             }
         }
 
@@ -50,20 +48,19 @@ namespace Assets.Scripts.Weapons
         private void EndMuzzleFlash() {
             ShootPointLight.intensity = 0;
         }
-    
-        public override void Attack() { // Shoot
-            // TODO: Append camera to Firearm script, get origin/direction from that camera
-            Vector3 origin = Camera.main.transform.position,
-                direction = Camera.main.transform.forward;
 
+        public override void Attack() { // Shoot
             var bullet = new Bullet {
-                Origin = origin,
-                Direction = direction,
+                Origin = CurrentHandler.BulletOrigin,
+                Direction = CurrentHandler.BulletDirection,
                 Accuracy = CurrentAdsRatio * HipFireRadius
             };
 
-            OnShoot?.Invoke();
-            FactionManager.ProduceNoise(Faction.Player, NoiseType.GunShot, transform.position);
+            MuzzleFlash();
+            if (CurrentHandler) {
+                CurrentHandler.OnShoot();
+                FactionManager.ProduceNoise(CurrentHandler.Entity.Faction, NoiseType.GunShot, transform.position);
+            }
             BulletQueue.Enqueue(bullet);
             Invoke("DelayBullet", BulletDelay);
         }
@@ -84,10 +81,6 @@ namespace Assets.Scripts.Weapons
                 var point = b.Origin + (b.Direction * Range);
                 Debug.DrawLine(b.Origin, point, Color.yellow, 5f);
             }
-        }
-
-        public override void Hit(GameObject o) {
-            base.Hit(o);
         }
 
         private static void RoughDirection(ref Vector3 direction, float hipfire) {

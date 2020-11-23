@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace Assets.Scripts.Weapons {
 
         #region Properties
         public bool Fire1 => Input.GetButton("Fire1");
+        public override Vector3 BulletOrigin => Camera.main.transform.position;
+        public override Vector3 BulletDirection => Camera.main.transform.forward;
         #endregion
 
         #region Methods
@@ -30,7 +33,7 @@ namespace Assets.Scripts.Weapons {
             }
         }
 
-        protected override void OnShoot() {
+        public override void OnShoot() {
             base.OnShoot();
             PlayerController.TriggerFire();
         }
@@ -42,6 +45,17 @@ namespace Assets.Scripts.Weapons {
             }
             return false;
         }
+
+        public override void OnHit(GameObject o) {
+            base.OnHit(o);
+            if (o.tag == "Enemy") {
+                var health = o.GetComponent<Health>();
+                health.CurrentHP -= Math.Abs(CurrentWeapon.Damage);
+            }
+
+            print($"Hit: {o.name} [{o.tag}]");
+        }
+        
         #endregion
     }
 }

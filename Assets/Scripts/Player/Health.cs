@@ -44,6 +44,7 @@ namespace Assets.Scripts.Player {
 
         private void HandleDeath() {
             OnDeath?.Invoke();
+            OnDeath = null;
             if (DestroyOnDeath) {
                 Destroy(gameObject);
             }

@@ -73,5 +73,6 @@ namespace Assets.Scripts.Helpers {
 
             public override string ToString() => Name;
         }
+
     }
 }

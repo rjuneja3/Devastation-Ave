@@ -19,7 +19,7 @@ namespace Assets.Scripts.Enemy {
             get => base.IsAttacking;
             protected set {
                 base.IsAttacking = value;
-                Animator.SetBool("Attack", value);
+                Animator?.SetBool("Attack", value);
             }
         }
 

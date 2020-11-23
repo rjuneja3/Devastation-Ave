@@ -246,8 +246,8 @@ GameObject:
   - component: {fileID: 8807116310363283849}
   - component: {fileID: 8807116310363283853}
   - component: {fileID: 8807116310363283854}
-  - component: {fileID: 8807116310363283855}
   - component: {fileID: 234604405482114999}
+  - component: {fileID: 4937727270675221908}
   m_Layer: 0
   m_Name: FirstUsableCharacter
   m_TagString: Player
@@ -540,19 +540,6 @@ MonoBehaviour:
   m_FootstepSounds: []
   m_JumpSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
   m_LandSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
---- !u!114 &8807116310363283855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8807116310428854275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a1de60698fad4546bef7a5620d03214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RightHand: {fileID: 8807116310429218283}
 --- !u!114 &234604405482114999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,6 +554,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartingHealth: 100
   DestroyOnDeath: 0
+--- !u!114 &4937727270675221908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807116310428854275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e78149930e1b974ab91c314ad18f7dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RightHand: {fileID: 8807116310429218283}
+  Weapon: {fileID: 0}
 --- !u!1 &8807116310428854277
 GameObject:
   m_ObjectHideFlags: 0
