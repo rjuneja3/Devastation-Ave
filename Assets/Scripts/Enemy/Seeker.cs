@@ -5,6 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Enemy {
+    /**
+     * @author Brenton Hauth
+     * @date 11/20/20
+     * <summary>
+     * Specific class for Seeker behaviour
+     * </summary>
+     */
     public class Seeker : Enemy {
         #region Exposed Variables
         #endregion
@@ -14,6 +21,13 @@ namespace Assets.Scripts.Enemy {
         #endregion
 
         #region Properties
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Flag to indicate if the enemy is attacking 
+         * </summary>
+         */
         public override bool IsAttacking {
             get => base.IsAttacking;
             protected set {
@@ -22,6 +36,13 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Flag to indicate speed of enemy
+         * </summary>
+         */
         public float ZSpeed {
             get => m_ZSpeed;
             set {
@@ -32,6 +53,13 @@ namespace Assets.Scripts.Enemy {
         #endregion
 
         #region Methods
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Start method called by Unity
+         * </summary>
+         */
         protected override void Start() {
             base.Start();
 
@@ -43,10 +71,13 @@ namespace Assets.Scripts.Enemy {
             Entity.OnNoise += OnNoise;
         }
 
-        protected override void Update() {
-            base.Update();
-        }
-
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the enemy finds a target
+         * </summary>
+         */
         protected override void OnTarget(FactionEntity newTarget) {
             if (!newTarget) {
                 ZSpeed = 2f;
@@ -55,14 +86,35 @@ namespace Assets.Scripts.Enemy {
         }
 
         #region State Methods
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Idle state starts
+         * </summary>
+         */
         protected override void OnIdleEnter() {
             ZSpeed = 0;
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Idle state ends
+         * </summary>
+         */
         protected override void OnIdleExit() {
             base.OnIdleExit();
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Seek state starts
+         * </summary>
+         */
         protected override void OnSeekEnter() {
             if (Entity.HasTarget) {
                 LookAndSetDestination(Entity.Target.Position);
@@ -73,6 +125,13 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Handles the Seek state for the Seeker
+         * </summary>
+         */
         protected override void OnSeekStay() {
             if (Entity.HasTarget) {
                 LookAndSetDestination(Entity.Target.Position);
@@ -84,15 +143,36 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Seek state ends
+         * </summary>
+         */
         protected override void OnSeekExit() {
             base.OnSeekExit();
             ZSpeed = 0;
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Attack state starts
+         * </summary>
+         */
         protected override void OnAttackEnter() {
             base.OnAttackEnter();
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Handles the attack state for the seeker
+         * </summary>
+         */
         protected override void OnAttackStay() {
             base.OnAttackStay();
             if (!Entity.HasTarget || !At(Entity.Target.Position)) {
@@ -100,11 +180,26 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when the Attack state ends
+         * </summary>
+         */
         protected override void OnAttackExit() {
             base.OnAttackExit();
         }
         #endregion
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when an enemy hit box hits an object
+         * </summary>
+         * <param name="o">The object hit by the hit box</param>
+         */
         private void OnHitBoxCollide(GameObject o) {
             if (IsAttacking && o.layer == FactionEntity.ENTITY_LAYER_INDEX) {
                 var check = Faction.All ^ Entity.Faction;
@@ -114,6 +209,13 @@ namespace Assets.Scripts.Enemy {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/20/20
+         * <summary>
+         * Called when a noise is produced by the FactionManager
+         * </summary>
+         */
         private void OnNoise(Vector3 origin, float strenth) {
             if (StateMachine.CurrentState.Name == "idle") {
                 Point = origin;

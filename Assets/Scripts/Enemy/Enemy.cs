@@ -15,7 +15,14 @@ namespace Assets.Scripts.Enemy {
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(FactionEntity))]
-    // [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator))]
+    /**
+     * @author Brenton Hauth
+     * @date 11/16/20
+     * <summary>
+     * Generic enemy class to be overriden by Specific enemies
+     * </summary>
+     */
     public abstract class Enemy : MonoBehaviour {
         #region Exposed Variables
         public float FovAngle = 60f;
@@ -47,7 +54,16 @@ namespace Assets.Scripts.Enemy {
         #endregion
 
         #region Methods
+        /**
+         * @author Brenton Hauth
+         * @date 11/16/20
+         * <summary>
+         * Awake method called by Unity
+         * </summary>
+         */
         protected virtual void Awake() {
+
+            // Sets up StateMachine, and added default states
             StateMachine = new StateMachine();
 
             StateMachine.AddState(new StateMachine.State {
@@ -92,15 +108,24 @@ namespace Assets.Scripts.Enemy {
             StateMachine.Update();
         }
 
-        /// <summary>
-        /// Called when enemy's health reaches 0
-        /// </summary>
+        /**
+         * @author Brenton Hauth
+         * @date 11/16/20
+         * <summary>
+         * Called when enemy's health reaches 0
+         * </summary>
+         */
         protected virtual void OnDeath() { }
 
-        /// <summary>
-        /// Called when FactionEntity spots a target
-        /// </summary>
-        /// <param name="newTarget"></param>
+
+        /**
+         * @author Brenton Hauth
+         * @date 11/16/20
+         * <summary>
+         * Called when FactionEntity spots a target
+         * </summary>
+         * <param name="newTarget"></param>
+         */
         protected abstract void OnTarget(FactionEntity newTarget);
 
         #region State Methods
