@@ -8,14 +8,16 @@ using UnityEngine.AI;
 
 namespace Assets.Scripts.Enemy {
     #region Enemy Enums
+    /**
+     * @author Brenton Hauth
+     * @date 11/16/20
+     * <summary>
+     * The different patrol patterns for enemy
+     * </summary>
+     */
     public enum PatrolPattern { None, Random, Ordered }
     #endregion
 
-    // [RequireComponent(typeof(AudioSource))]
-    [RequireComponent(typeof(Health))]
-    [RequireComponent(typeof(NavMeshAgent))]
-    [RequireComponent(typeof(FactionEntity))]
-    [RequireComponent(typeof(Animator))]
     /**
      * @author Brenton Hauth
      * @date 11/16/20
@@ -23,6 +25,10 @@ namespace Assets.Scripts.Enemy {
      * Generic enemy class to be overriden by Specific enemies
      * </summary>
      */
+    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(FactionEntity))]
+    [RequireComponent(typeof(Animator))]
     public abstract class Enemy : MonoBehaviour {
         #region Exposed Variables
         public float FovAngle = 60f;
@@ -88,6 +94,13 @@ namespace Assets.Scripts.Enemy {
             });
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/16/20
+         * <summary>
+         * Start method called by Unity
+         * </summary>
+         */
         protected virtual void Start() {
             // Get required components
             Agent = GetComponent<NavMeshAgent>();
@@ -103,6 +116,13 @@ namespace Assets.Scripts.Enemy {
             StateMachine.Start(); // start the State Machine
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/16/20
+         * <summary>
+         * Update method called by Unity
+         * </summary>
+         */
         protected virtual void Update() {
             // Update current state
             StateMachine.Update();
