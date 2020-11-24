@@ -5,7 +5,6 @@ using System;
 using Assets.Scripts.Enemy;
 
 namespace Assets.Scripts.Weapons {
-    [RequireComponent(typeof(Enemy.Enemy))]
     public class EnemyWeaponHandler : WeaponHandler {
         #region Exposed Variables
         #endregion

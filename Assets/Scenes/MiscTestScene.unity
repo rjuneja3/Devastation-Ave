@@ -1939,6 +1939,103 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00d98e642405f8a448fb9011d042ec35, type: 3}
+--- !u!1 &1759687739 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1463151604687914, guid: 00d98e642405f8a448fb9011d042ec35,
+    type: 3}
+  m_PrefabInstance: {fileID: 1759687738}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1759687740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759687739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb09baa964a7ae7449223bfc76a27510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FovAngle: 60
+  DetectionRange: 50
+  AtRange: 1
+  Damage: 10
+  Pattern: 1
+  RandomRange: {x: 0, y: 0}
+  PatrolPoints: []
+  Accuracy: 1
+--- !u!195 &1759687741
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759687739}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &1759687742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759687739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c256bfd9f15e40b45be6fb22f1d7e6b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RightHand: {fileID: 0}
+  Weapon: {fileID: 0}
+--- !u!114 &1759687743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759687739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d741d172b39afe4d8bff75c7e3f6755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Faction: 2
+  TargetType: 2
+  Sensitivity: 2
+  IsControlled: 0
+  FovAngle: 60
+  DetectionRange: 50
+  HasEyes: 1
+  Hidden: 0
+  Head: {fileID: 0}
+--- !u!114 &1759687744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759687739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f027ab5fd628140bb41dec0348336a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartingHealth: 100
+  DestroyOnDeath: 1
 --- !u!1 &1778691498
 GameObject:
   m_ObjectHideFlags: 0

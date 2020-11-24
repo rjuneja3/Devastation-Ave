@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Factions;
+using Assets.Scripts.Weapons;
 using UnityEngine;
 
 namespace Assets.Scripts.Enemy {
+    [RequireComponent(typeof(EnemyWeaponHandler))]
     public class Soldier : Enemy {
         #region Exposed Variables
         public float Accuracy = 1f;
         #endregion
 
         #region Variables
+        private EnemyWeaponHandler WeaponHandler;
         private float m_ZSpeed, m_XSpeed;
         #endregion
 
@@ -34,6 +37,7 @@ namespace Assets.Scripts.Enemy {
         #region Methods
         protected override void Start() {
             base.Start();
+            WeaponHandler = GetComponent<EnemyWeaponHandler>();
 
             // Resets layer positions
             int @base = Animator.GetLayerIndex("Base"),
