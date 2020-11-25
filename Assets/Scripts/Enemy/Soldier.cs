@@ -5,6 +5,14 @@ using Assets.Scripts.Weapons;
 using UnityEngine;
 
 namespace Assets.Scripts.Enemy {
+    /**
+     * @author Brenton Hauth
+     * @date 11/18/20
+     * <summary>
+     * Handles Soldier Behaviour. Extends <c>Enemy</c> class.
+     * </summary>
+     * <see cref="Enemy"/>
+     */
     [RequireComponent(typeof(EnemyWeaponHandler))]
     public class Soldier : Enemy {
         #region Exposed Variables

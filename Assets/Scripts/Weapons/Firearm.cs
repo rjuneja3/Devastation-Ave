@@ -5,8 +5,32 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Weapons {
+    #region Firearm Enums
+    /**
+     * @author Brenton Hauth
+     * @date 11/25/20
+     * <summary>
+     * Suggests what action should be taken depending on the amount of ammo
+     * </summary>
+     */
+    public enum ReloadSuggestion {
+        None = 0,
+        Reload = 1,
+        LowOnAmmo = 2,
+        OutOfAmmo = 4
+    }
+    #endregion
+
+    /**
+     * @author Brenton Hauth
+     * @date 11/25/20
+     * <summary>
+     * Attached to all Firearm based weapons. Extends <c>Weapon</c> class.
+     * </summary>
+     * <see cref="Weapon" />
+     */
     public class Firearm : Weapon {
-        public const float BulletDelay = 4f / 60f; // ~4 frames. Call of Duty does this.
+        public const float BulletDelay = 4f / 60f; // ~4 frames.
 
         #region Exposed Variables
         public float HipFireRadius = 60f;
@@ -19,7 +43,7 @@ namespace Assets.Scripts.Weapons {
         private Queue<Bullet> BulletQueue = new Queue<Bullet>();
         private GameObject ShootPoint;
         private Light ShootPointLight;
-        private uint CurrentMag = 0;
+        private uint m_CurrentMag = 0;
         #endregion
 
         #region Properties
@@ -28,14 +52,41 @@ namespace Assets.Scripts.Weapons {
             get => base.CanAttack && CurrentMag > 0;
             set => base.CanAttack = value;
         }
+        public uint CurrentMag {
+            get => m_CurrentMag;
+            private set {
+                m_CurrentMag = value;
+                if (Ammo == 0u) {
+                    ReloadSuggestion = m_CurrentMag == 0u
+                        ? ReloadSuggestion.OutOfAmmo
+                        : ReloadSuggestion.LowOnAmmo;
+                } else if ((m_CurrentMag / (float)MagSize) <= .3f) {
+                    ReloadSuggestion = ReloadSuggestion.Reload;
+                } else {
+                    ReloadSuggestion = ReloadSuggestion.None;
+                }
+                CurrentHandler?.OnReload(ReloadSuggestion);
+            }
+        }
+        public ReloadSuggestion ReloadSuggestion { get; private set; }
         #endregion
 
         #region Methods
-        /// <param name="ratio">0.0 means they are aiming, 1.0 means they are not aiming</param>
+        /**
+         * @author Brenton Hauth
+         * @date 10/20/20
+         * <summary>Update the accuracy of the shot</summary>
+         * <param name="ratio">0.0 means they are aiming, 1.0 means they are not aiming</param>
+         */
         public void SetAdsRatio(float ratio) {
             CurrentAdsRatio = Mathf.Clamp01(ratio);
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 10/20/20
+         * <summary>Start method called by Unity</summary>
+         */
         protected override void Start() {
             base.Start();
             var sp = transform.Find("ShootPoint");
@@ -46,6 +97,11 @@ namespace Assets.Scripts.Weapons {
             RefillMag();
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/22/20
+         * <summary>Refils the mag</summary>
+         */
         private void RefillMag() {
             uint amount = MagSize - CurrentMag;
             uint take = Math.Min(Ammo, amount);
@@ -53,15 +109,30 @@ namespace Assets.Scripts.Weapons {
             Ammo -= take;
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/08/20
+         * <summary>Creates light at the end of the barrel</summary>
+         */
         private void MuzzleFlash() {
             ShootPointLight.intensity = 1;
             Invoke("EndMuzzleFlash", BulletDelay / 2f);
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/08/20
+         * <summary>Turns off light at the end of the barrel</summary>
+         */
         private void EndMuzzleFlash() {
             ShootPointLight.intensity = 0;
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 10/31/20
+         * <summary>"Shoots" the firearm</summary>
+         */
         public override void Attack() { // Shoot
             var bullet = new Bullet {
                 Origin = CurrentHandler.BulletOrigin,
@@ -69,7 +140,7 @@ namespace Assets.Scripts.Weapons {
                 Accuracy = CurrentAdsRatio * HipFireRadius
             };
 
-            CurrentMag--;
+            CurrentMag--; // Subtracts a bullet from the mag
 
             MuzzleFlash();
             if (CurrentHandler) {
@@ -80,6 +151,13 @@ namespace Assets.Scripts.Weapons {
             Invoke("DelayBullet", BulletDelay);
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/21/20
+         * <summary>
+         * Causes a delay in the bullet to make it appear as if it travels
+         * </summary>
+         */
         private void DelayBullet() {
             const int layer = FactionEntity.LANDSCAPE_AND_ENTITIES;
             Bullet b = BulletQueue.Dequeue();
@@ -99,6 +177,13 @@ namespace Assets.Scripts.Weapons {
             }
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 10/20/20
+         * <summary>
+         * Changes the direction of the bullet depending on hipfire & accuracy
+         * </summary>
+         */
         private static void RoughDirection(ref Vector3 direction, float hipfire) {
             // change calculation, not sure if correct
             direction.x += Random.Range(-hipfire, hipfire);
@@ -106,10 +191,17 @@ namespace Assets.Scripts.Weapons {
         }
         #endregion
 
+        #region Bullet Struct
+        /**
+         * @author Brenton Hauth
+         * @date 10/20/20
+         * <summary>Holds the data to cast a ray bullet</summary>
+         */
         public struct Bullet {
             public Vector3 Origin;
             public Vector3 Direction;
             public float Accuracy;
         }
+        #endregion
     }
 }

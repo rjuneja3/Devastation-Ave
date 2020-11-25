@@ -6,6 +6,15 @@ using UnityEngine;
 
 
 namespace Assets.Scripts.Weapons {
+    /**
+     * @author Brenton Hauth
+     * @date 11/18/20
+     * <summary>
+     * Handles all weapon interactions for the Player.
+     * Extends <c>WeaponHandler</c>.
+     * </summary>
+     * <see cref="WeaponHandler" />
+     */
     [RequireComponent(typeof(PlayerController))]
     public class PlayerWeaponHandler : WeaponHandler {
         #region Exposed Variables
