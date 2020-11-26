@@ -17,10 +17,13 @@ namespace Assets.Scripts.Weapons {
      */
     [RequireComponent(typeof(PlayerController))]
     public class PlayerWeaponHandler : WeaponHandler {
+        
         #region Exposed Variables
         #endregion
 
         #region Variables
+        private static readonly Vector3 PlayerFirearmPosition = new Vector3(0.241f, -0.03f, 0.019f);
+        private static readonly Vector3 PlayerFirearmEulerRotation = new Vector3(-0.365f, 94.091f, 90.735f);
         private PlayerController PlayerController;
         #endregion
 
@@ -28,6 +31,8 @@ namespace Assets.Scripts.Weapons {
         public bool Fire1 => Input.GetButton("Fire1");
         public override Vector3 BulletOrigin => Camera.main.transform.position;
         public override Vector3 BulletDirection => Camera.main.transform.forward;
+        public override Vector3 FirearmPosition => PlayerFirearmPosition;
+        public override Vector3 FirearmEulerRotation => PlayerFirearmEulerRotation;
         #endregion
 
         #region Methods
@@ -37,8 +42,14 @@ namespace Assets.Scripts.Weapons {
         }
 
         protected override void Update() {
-            if (Fire1 && HasWeapon) {
+            if (!HasWeapon) return;
+            if (Fire1) {
                 CurrentWeapon.TryAttacking();
+            } else if (Input.GetKeyDown(KeyCode.R)) {
+                const ReloadSuggestion rs = ReloadSuggestion.Reload | ReloadSuggestion.LowOnAmmo;
+                if (CurrentWeapon is Firearm f && (f.ReloadSuggestion & (rs)) != 0) {
+                    f.Reload();
+                }
             }
         }
 
@@ -64,7 +75,10 @@ namespace Assets.Scripts.Weapons {
 
             print($"Hit: {o.name} [{o.tag}]");
         }
-        
+
+        public override void OnReload(ReloadSuggestion suggestion) {
+            HudHandler.Prompt(KeyCode.R, "to Reload");
+        }
         #endregion
     }
 }

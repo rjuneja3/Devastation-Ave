@@ -220,6 +220,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hunter (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7682881189059646051, guid: 0e0c3cc034271a243b657d4efff8ba74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9111659708420516866, guid: 0e0c3cc034271a243b657d4efff8ba74,
         type: 3}
       propertyPath: Faction
@@ -460,6 +465,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hunter
+      objectReference: {fileID: 0}
+    - target: {fileID: 7682881189059646051, guid: 0e0c3cc034271a243b657d4efff8ba74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e0c3cc034271a243b657d4efff8ba74, type: 3}
@@ -1788,6 +1798,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1907389007830783388, guid: 9a21925963ad72641b17d3da3e0c173f,
+        type: 3}
+      propertyPath: Ammo
+      value: 500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a21925963ad72641b17d3da3e0c173f, type: 3}
 --- !u!1 &1737801326
@@ -2090,12 +2105,7 @@ PrefabInstance:
     - target: {fileID: 4342237962274437151, guid: 131af03a9abc1fa42956520731332d18,
         type: 3}
       propertyPath: m_Name
-      value: Soldier_Team4_Standard
-      objectReference: {fileID: 0}
-    - target: {fileID: 4342237962274437151, guid: 131af03a9abc1fa42956520731332d18,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: Soldier
       objectReference: {fileID: 0}
     - target: {fileID: 4344269170437617005, guid: 131af03a9abc1fa42956520731332d18,
         type: 3}

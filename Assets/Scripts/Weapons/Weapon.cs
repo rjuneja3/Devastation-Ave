@@ -32,7 +32,7 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Properties
-        protected virtual bool CanAttack { get; set; }
+        protected virtual bool CanAttack { get; set; } = true;
 
         public WeaponHandler CurrentHandler { get; private set; }
         public bool IsPickedUp {
@@ -94,6 +94,7 @@ namespace Assets.Scripts.Weapons {
                 CanAttack = false;
                 Invoke("SetAttackFlag", RateOfAttack);
             } else return;
+            
 
             AudioSource.Play();
 

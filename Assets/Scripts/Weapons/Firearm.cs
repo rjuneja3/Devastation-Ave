@@ -107,6 +107,11 @@ namespace Assets.Scripts.Weapons {
             uint take = Math.Min(Ammo, amount);
             CurrentMag += take;
             Ammo -= take;
+            print("!!! RELOADED !!!");
+        }
+
+        public void Reload() {
+            Invoke("RefillMag", 1.5f);
         }
 
         /**

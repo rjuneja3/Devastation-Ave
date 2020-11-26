@@ -15,9 +15,14 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Variables
+        private static readonly Vector3 EnemyFirearmPosition = new Vector3(0f, 0.174f, 0.063f);
+        private static readonly Vector3 EnemyFirearmEulerRotation = new Vector3(-100.278f, 230.321f, -40.765f);
         #endregion
 
         #region Properties
+        public override Vector3 FirearmPosition => EnemyFirearmPosition;
+        public override Vector3 FirearmEulerRotation => EnemyFirearmEulerRotation;
+
         /**
          * @author Brenton Hauth
          * @date 11/20/20
@@ -33,6 +38,7 @@ namespace Assets.Scripts.Weapons {
          * </summary>
          */
         public override Vector3 BulletDirection => throw new NotImplementedException();
+
         #endregion
 
         #region Methods

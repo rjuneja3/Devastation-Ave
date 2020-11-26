@@ -53,12 +53,7 @@ namespace Assets.Scripts.Enemy {
         protected override void Start() {
             base.Start();
             WeaponHandler = GetComponent<EnemyWeaponHandler>();
-
-            // Resets layer positions
-            int @base = Animator.GetLayerIndex("Base"),
-                firearm = Animator.GetLayerIndex("Firearm");
-            Animator.SetLayerWeight(@base, 0f);
-            Animator.SetLayerWeight(firearm, 1f);
+            WeaponHandler.ActivateLayer(AnimationLayer.Firearm);
         }
 
         /**
