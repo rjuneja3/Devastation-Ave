@@ -69,9 +69,9 @@ namespace Assets.Scripts.Weapons {
          * <param name="handler">The handler to attach the weapon. Pass 'null' to unequip</param>
          */
         public virtual void AttachToHandler(WeaponHandler handler) {
-            
             transform.SetParent(handler?.RightHand);
             if (transform.parent) CurrentHandler = handler;
+            SetAttackFlag();
         }
 
         /**

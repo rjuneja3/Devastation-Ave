@@ -144,7 +144,7 @@ namespace Assets.Scripts.Weapons {
         public virtual void OnHit(GameObject o) { }
         // TODO: ^^^ potentially change to abstract method
 
-        public virtual void OnReload(ReloadSuggestion suggestion) { }
+        public virtual void OnReload(ReloadFlag suggestion) { }
         #endregion
     }
 }

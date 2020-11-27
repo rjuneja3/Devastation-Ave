@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Factions;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Weapons;
 using UnityEngine;
 
@@ -17,11 +18,13 @@ namespace Assets.Scripts.Enemy {
     public class Soldier : Enemy {
         #region Exposed Variables
         public float Accuracy = 1f;
+        public float RateOfAttack = 1.75f;
         #endregion
 
         #region Variables
         private EnemyWeaponHandler WeaponHandler;
         private float m_ZSpeed, m_XSpeed;
+        private bool AbleToAttack = true;
         #endregion
 
         #region Properties
@@ -54,6 +57,9 @@ namespace Assets.Scripts.Enemy {
             base.Start();
             WeaponHandler = GetComponent<EnemyWeaponHandler>();
             WeaponHandler.ActivateLayer(AnimationLayer.Firearm);
+            if (WeaponHandler.CurrentWeapon is Firearm f && f.CanReload) {
+                f.Reload();
+            }
         }
 
         /**
@@ -172,11 +178,11 @@ namespace Assets.Scripts.Enemy {
          * </summary>
          */
         protected override void OnAttackStay() {
-            base.OnAttackStay();
             LookAt(Entity.Target.Position);
             if (!HasCleanShot) {
                 StateMachine.TransitionTo("seek");
             }
+            TryShooting();
         }
         
         /**
@@ -187,8 +193,23 @@ namespace Assets.Scripts.Enemy {
          */
         protected override void OnAttackExit() {
             base.OnAttackExit();
+            if (WeaponHandler.CurrentWeapon is Firearm f && f.CanReload) {
+                f.Reload();
+            }
         }
+
         #endregion
+        private void TryShooting() {
+            if (AbleToAttack) {
+                AbleToAttack = false;
+                Invoke("SetAttackFlag", RateOfAttack);
+            } else return;
+
+            print("Try shooting");
+            WeaponHandler.CurrentWeapon.TryAttacking();
+        }
+
+        private void SetAttackFlag() => AbleToAttack = true;
         #endregion
     }
 }

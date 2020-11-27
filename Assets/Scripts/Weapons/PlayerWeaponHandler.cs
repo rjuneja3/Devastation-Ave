@@ -46,8 +46,7 @@ namespace Assets.Scripts.Weapons {
             if (Fire1) {
                 CurrentWeapon.TryAttacking();
             } else if (Input.GetKeyDown(KeyCode.R)) {
-                const ReloadSuggestion rs = ReloadSuggestion.Reload | ReloadSuggestion.LowOnAmmo;
-                if (CurrentWeapon is Firearm f && (f.ReloadSuggestion & (rs)) != 0) {
+                if (CurrentWeapon is Firearm f && f.CanReload) {
                     f.Reload();
                 }
             }
@@ -76,7 +75,7 @@ namespace Assets.Scripts.Weapons {
             print($"Hit: {o.name} [{o.tag}]");
         }
 
-        public override void OnReload(ReloadSuggestion suggestion) {
+        public override void OnReload(ReloadFlag suggestion) {
             HudHandler.Prompt(KeyCode.R, "to Reload");
         }
         #endregion

@@ -13,11 +13,12 @@ namespace Assets.Scripts.Weapons {
      * Suggests what action should be taken depending on the amount of ammo
      * </summary>
      */
-    public enum ReloadSuggestion {
+    [Flags]
+    public enum ReloadFlag {
         None = 0,
-        Reload = 1,
+        LowMag = 8,
         LowOnAmmo = 2,
-        OutOfAmmo = 4
+        OutOfAmmo = 4,
     }
     #endregion
 
@@ -43,10 +44,13 @@ namespace Assets.Scripts.Weapons {
         private Queue<Bullet> BulletQueue = new Queue<Bullet>();
         private GameObject ShootPoint;
         private Light ShootPointLight;
+        private bool CurrentlyReloading = false;
         private uint m_CurrentMag = 0;
         #endregion
 
         #region Properties
+        public bool CanReload => !CurrentlyReloading && m_CurrentMag < MagSize && Ammo > 0u;
+
         public float CurrentAdsRatio { get; private set; }
         protected override bool CanAttack {
             get => base.CanAttack && CurrentMag > 0;
@@ -56,19 +60,20 @@ namespace Assets.Scripts.Weapons {
             get => m_CurrentMag;
             private set {
                 m_CurrentMag = value;
-                if (Ammo == 0u) {
-                    ReloadSuggestion = m_CurrentMag == 0u
-                        ? ReloadSuggestion.OutOfAmmo
-                        : ReloadSuggestion.LowOnAmmo;
+                /*if (Ammo == 0u) {
+                    CurrentFlags = m_CurrentMag == 0u
+                        ? ReloadFlag.OutOfAmmo
+                        : ReloadFlag.LowOnAmmo;
                 } else if ((m_CurrentMag / (float)MagSize) <= .3f) {
-                    ReloadSuggestion = ReloadSuggestion.Reload;
+                    CurrentFlags |= ReloadFlag.CanReload;
                 } else {
-                    ReloadSuggestion = ReloadSuggestion.None;
+                    CurrentFlags = ReloadFlag.None;
                 }
-                CurrentHandler?.OnReload(ReloadSuggestion);
+                CurrentHandler?.OnReload(CurrentFlags);*/
             }
         }
-        public ReloadSuggestion ReloadSuggestion { get; private set; }
+
+        public ReloadFlag CurrentFlags { get; private set; }
         #endregion
 
         #region Methods
@@ -107,10 +112,11 @@ namespace Assets.Scripts.Weapons {
             uint take = Math.Min(Ammo, amount);
             CurrentMag += take;
             Ammo -= take;
-            print("!!! RELOADED !!!");
+            CurrentlyReloading = false;
         }
 
         public void Reload() {
+            CurrentlyReloading = true;
             Invoke("RefillMag", 1.5f);
         }
 
