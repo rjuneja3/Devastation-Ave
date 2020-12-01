@@ -5,6 +5,7 @@ using System;
 using Assets.Scripts.Enemy;
 using Assets.Scripts.Factions;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.General;
 
 namespace Assets.Scripts.Weapons {
     /**
@@ -44,8 +45,8 @@ namespace Assets.Scripts.Weapons {
          */
         public override Vector3 BulletDirection {
             get {
-                var target = RoughDirectionToTarget(Accuracy);
-                return target - BulletOrigin;
+                var target = RoughTargetLocation(Accuracy);
+                return target - BulletOrigin; // No need to normalize
             }
         }
 
@@ -73,8 +74,15 @@ namespace Assets.Scripts.Weapons {
         protected override void Update() { }
 
         /**
+         * @author Brenton Hauth
+         * @date 11/26/20
+         * <summary>
+         * Creates a rough direction to the associated entity target
+         * </summary>
+         * <param name="accuracy">How accurate they are. (0 means they will never miss)</param>
+         * <returns>A point near the target (depending on the accuracy)</returns>
          */
-        private Vector3 RoughDirectionToTarget(float accuracy) {
+        private Vector3 RoughTargetLocation(float accuracy) {
             if (accuracy == 0) {
                 return Entity.Target.Position + Vector3.up;
             }
@@ -83,11 +91,17 @@ namespace Assets.Scripts.Weapons {
                 VectorHelper.RandomVector3(-accuracy, accuracy);
         }
 
+        /**
+         * @author Brenton Hauth
+         * @date 11/22/20
+         * <summary>Called if the current weapon hits an object</summary>
+         * <param name="o">The object hit by the weapon (or bullet)</param>
+         */
         public override void OnHit(GameObject o) {
             Faction check = Faction.All ^ Entity.Faction;
             if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {
                 print($"{Entity} hit {entity}");
-                entity.Health.CurrentHP -= CurrentWeapon.Damage;
+                entity.Health.CurrentHP -= CurrentWeapon.Damage * GameSettings.EnemyDamageMultiplier;
             }
         }
         #endregion

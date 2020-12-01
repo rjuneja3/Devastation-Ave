@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Factions;
+using Assets.Scripts.General;
 using Assets.Scripts.Player;
 using System.Collections;
 using System.Collections.Generic;
@@ -203,8 +204,8 @@ namespace Assets.Scripts.Enemy {
         private void OnHitBoxCollide(GameObject o) {
             if (IsAttacking && o.layer == FactionEntity.ENTITY_LAYER_INDEX) {
                 var check = Faction.All ^ Entity.Faction;
-                if (FactionManager.CheckCache(check, o.transform, out var entity, true)) {
-                    entity.Health.CurrentHP -= Damage;
+                if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {
+                    entity.Health.CurrentHP -= Damage * GameSettings.EnemyDamageMultiplier;
                 }
             }
         }
