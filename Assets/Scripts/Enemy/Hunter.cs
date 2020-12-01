@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Factions;
+using Assets.Scripts.General;
 using Assets.Scripts.Player;
 using UnityEngine;
 
@@ -101,7 +102,7 @@ namespace Assets.Scripts.Enemy {
                 var check = Faction.All ^ Entity.Faction;
                 print($"{name} is attacking {o.name}");
                 if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {
-                    entity.Health.CurrentHP -= Damage;
+                    entity.Health.CurrentHP -= Damage * GameSettings.EnemyDamageMultiplier;
                 }
             }
         }

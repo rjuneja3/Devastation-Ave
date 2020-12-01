@@ -324,10 +324,10 @@ MonoBehaviour:
   RateOfAttack: 0.2
   Range: 200
   Damage: 10
-  DebugMode: 0
+  DebugMode: 1
   HipFireRadius: 60
   MagSize: 30
-  Ammo: 0
+  Ammo: 120
   BulletCount: 1
 --- !u!1 &1326669635353424
 GameObject:

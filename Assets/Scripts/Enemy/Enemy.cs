@@ -198,8 +198,7 @@ namespace Assets.Scripts.Enemy {
 
         protected void LookAt(Vector3 target) {
             if (!At(target)) {
-                var dir = target - transform.position;
-                dir.y = 0; // Either set to 0 or position.y
+                var dir = (target - transform.position).X0Z();
                 transform.rotation = Quaternion.LookRotation(dir);
             }
         }

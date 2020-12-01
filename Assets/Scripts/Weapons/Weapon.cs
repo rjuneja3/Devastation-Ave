@@ -32,7 +32,7 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Properties
-        protected virtual bool CanAttack { get; set; }
+        protected virtual bool CanAttack { get; set; } = true;
 
         public WeaponHandler CurrentHandler { get; private set; }
         public bool IsPickedUp {
@@ -69,9 +69,9 @@ namespace Assets.Scripts.Weapons {
          * <param name="handler">The handler to attach the weapon. Pass 'null' to unequip</param>
          */
         public virtual void AttachToHandler(WeaponHandler handler) {
-            
             transform.SetParent(handler?.RightHand);
             if (transform.parent) CurrentHandler = handler;
+            SetAttackFlag();
         }
 
         /**
@@ -94,6 +94,7 @@ namespace Assets.Scripts.Weapons {
                 CanAttack = false;
                 Invoke("SetAttackFlag", RateOfAttack);
             } else return;
+            
 
             AudioSource.Play();
 

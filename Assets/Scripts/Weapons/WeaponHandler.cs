@@ -33,8 +33,6 @@ namespace Assets.Scripts.Weapons {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(FactionEntity))]
     public abstract class WeaponHandler : MonoBehaviour {
-        protected static readonly Vector3 FirearmPosition = new Vector3(0.241f, -0.03f, 0.019f);
-        protected static readonly Vector3 FirearmEulerRotation = new Vector3(-0.365f, 94.091f, 90.735f);
 
         #region Exposed Variables
         public Transform RightHand;
@@ -50,6 +48,8 @@ namespace Assets.Scripts.Weapons {
         public bool ShouldReload { get; private set; }
         public abstract Vector3 BulletOrigin { get; }
         public abstract Vector3 BulletDirection { get; }
+        public abstract Vector3 FirearmPosition { get; }
+        public abstract Vector3 FirearmEulerRotation { get; }
         public Weapon CurrentWeapon { get; protected set; } = null;
         public FactionEntity Entity { get; private set; }
         #endregion
@@ -63,7 +63,7 @@ namespace Assets.Scripts.Weapons {
         protected virtual void Start() {
             Animator = GetComponent<Animator>();
             Entity = GetComponent<FactionEntity>();
-            if (Weapon) Equip(Weapon);
+            if (Weapon) Equip(Instantiate(Weapon));
         }
 
         /**
@@ -144,7 +144,7 @@ namespace Assets.Scripts.Weapons {
         public virtual void OnHit(GameObject o) { }
         // TODO: ^^^ potentially change to abstract method
 
-        public virtual void OnReload(ReloadSuggestion suggestion) { }
+        public virtual void OnReload(ReloadFlag suggestion) { }
         #endregion
     }
 }
