@@ -20,10 +20,18 @@ namespace Assets.Scripts.Factions {
 
         #region Variables
         private Dictionary<Faction, FactionEntities> Entities;
+        private static FactionManager m_Self;
         #endregion
 
         #region Properties
-        public static FactionManager Self { get; private set; }
+        public static FactionManager Self {
+            get {
+                if (!m_Self) {
+                    Debug.LogError("There is no faction manager! Please add FactionManager to an object.");
+                }
+                return m_Self;
+            }
+        }
         #endregion
 
         #region Methods
@@ -37,7 +45,7 @@ namespace Assets.Scripts.Factions {
          * </summary>
          */
         private void Awake() {
-            Self = this; // Sets singleton
+            m_Self = this; // Sets singleton
             Entities = new Dictionary<Faction, FactionEntities>() {
                 { Faction.Player, new FactionEntities(Faction.Player) },
                 { Faction.Monster, new FactionEntities(Faction.Monster) },
@@ -76,6 +84,7 @@ namespace Assets.Scripts.Factions {
          * <param name="entity">The entity to unregister</param>
          */
         public static void Unregister(FactionEntity entity) {
+            if (!Self) return;
             Self.Entities[entity.Faction].Remove(entity.transform);
             if (entity.Sensitivity != SoundSensitivity.None) {
                 ListenForNoise -= entity.ListenForNoise;
