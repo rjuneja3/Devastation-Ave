@@ -15,6 +15,8 @@ namespace Assets.Scripts.Weapons {
      * </summary>
      * <see cref="WeaponHandler" />
      */
+
+        //
     [RequireComponent(typeof(PlayerController))]
     public class PlayerWeaponHandler : WeaponHandler {
         
@@ -22,8 +24,8 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Variables
-        private static readonly Vector3 PlayerFirearmPosition = new Vector3(0.241f, -0.03f, 0.019f);
-        private static readonly Vector3 PlayerFirearmEulerRotation = new Vector3(-0.365f, 94.091f, 90.735f);
+        private static readonly Vector3 PlayerFirearmPosition = new Vector3(0.2f, -0.126f, 0.022f);
+        private static readonly Vector3 PlayerFirearmEulerRotation = new Vector3(23.388f, 101.565f, 67.867f);
         private PlayerController PlayerController;
         #endregion
 
