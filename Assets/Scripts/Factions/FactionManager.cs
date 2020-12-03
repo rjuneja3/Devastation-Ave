@@ -20,10 +20,20 @@ namespace Assets.Scripts.Factions {
 
         #region Variables
         private Dictionary<Faction, FactionEntities> Entities;
+        private static FactionManager m_Self;
+        private static Queue<FactionEntity> RegisterQueue = new Queue<FactionEntity>();
         #endregion
 
         #region Properties
-        public static FactionManager Self { get; private set; }
+        public static bool Initialized { get; private set; }
+        public static FactionManager Self {
+            get {
+                if (!m_Self) {
+                    Debug.LogError("There is no faction manager! Please add FactionManager to an object.");
+                }
+                return m_Self;
+            }
+        }
         #endregion
 
         #region Methods
@@ -37,16 +47,21 @@ namespace Assets.Scripts.Factions {
          * </summary>
          */
         private void Awake() {
-            Self = this; // Sets singleton
+            m_Self = this; // Sets singleton
             Entities = new Dictionary<Faction, FactionEntities>() {
                 { Faction.Player, new FactionEntities(Faction.Player) },
                 { Faction.Monster, new FactionEntities(Faction.Monster) },
                 { Faction.Gov, new FactionEntities(Faction.Gov) }
             };
-            
+            Initialized = true;
         }
 
-        // private void Start() { }
+        private void Start() {
+            while (RegisterQueue.Count > 0) {
+                Register(RegisterQueue.Dequeue());
+            }
+            RegisterQueue = null;
+        }
         // private void Update() { }
 
         /**
@@ -58,6 +73,11 @@ namespace Assets.Scripts.Factions {
          * <param name="entity">The entity to register</param>
          */
         public static void Register(FactionEntity entity) {
+            if (!m_Self && !Initialized) {
+                RegisterQueue.Enqueue(entity);
+                return;
+            }
+
             if (Self && !entity.IsRegistered) {
                 Self.Entities[entity.Faction].Add(entity);
                 if (entity.Sensitivity != SoundSensitivity.None) {
@@ -76,6 +96,7 @@ namespace Assets.Scripts.Factions {
          * <param name="entity">The entity to unregister</param>
          */
         public static void Unregister(FactionEntity entity) {
+            if (!m_Self) return;
             Self.Entities[entity.Faction].Remove(entity.transform);
             if (entity.Sensitivity != SoundSensitivity.None) {
                 ListenForNoise -= entity.ListenForNoise;
