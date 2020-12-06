@@ -30,8 +30,8 @@ namespace Assets.Scripts.Weapons {
      * <see cref="PlayerWeaponHandler" />
      * <see cref="EnemyWeaponHandler" />
      */
-    [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(FactionEntity))]
+    // [RequireComponent(typeof(Animator))]
+    // [RequireComponent(typeof(FactionEntity))]
     public abstract class WeaponHandler : MonoBehaviour {
 
         #region Exposed Variables
@@ -40,7 +40,6 @@ namespace Assets.Scripts.Weapons {
         #endregion
 
         #region Variables
-        private Animator Animator;
         #endregion
 
         #region Properties
@@ -51,7 +50,8 @@ namespace Assets.Scripts.Weapons {
         public abstract Vector3 FirearmPosition { get; }
         public abstract Vector3 FirearmEulerRotation { get; }
         public Weapon CurrentWeapon { get; protected set; } = null;
-        public FactionEntity Entity { get; private set; }
+        public FactionEntity Entity { get; protected set; }
+        public Animator Animator { get; protected set; }
         #endregion
 
         #region Methods
@@ -71,7 +71,7 @@ namespace Assets.Scripts.Weapons {
          * @date 11/08/20
          * <summary>Update function called by Unity.</summary>
          */
-        protected virtual void Update() { }
+        protected abstract void Update();
 
         /**
          * @author Brenton Hauth
