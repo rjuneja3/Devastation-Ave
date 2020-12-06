@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Menu {
     public class MenuHandler : MonoBehaviour {
 
         public void OnMultiplayerClick() {
-            throw new NotImplementedException();
+            SceneManager.LoadScene("TestMultiplayerScene");
         }
     }
 }
