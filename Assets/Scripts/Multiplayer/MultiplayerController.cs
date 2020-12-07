@@ -59,7 +59,7 @@ namespace Assets.Scripts.Multiplayer {
         private void Update() {
             if (!isLocalPlayer) return;
             Move();
-            RotateSpine();
+            //RotateSpine();
         }
 
         private void Fire() {
@@ -116,14 +116,24 @@ namespace Assets.Scripts.Multiplayer {
         }
 
         private void RotateSpine() {
+            //Spine.Rotate()
+            const int min = -50, max = 400;
+            //Spine.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Spine.up);
             //yAxis += Input.GetAxis("Mouse X");
             //yAxis = Mathf.Clamp(yAxis, -40, 40);
-            xAxis -= Input.GetAxis("Mouse Y") * 10f;
-            xAxis = Mathf.Clamp(xAxis, -400, 400);
-            Vector3 newSpineRotation = Spine.localEulerAngles;// new Vector3(xAxis, , Spine.localEulerAngles.z);
-            newSpineRotation.z = xAxis;
-            Spine.localEulerAngles = newSpineRotation;
+            xAxis -= Input.GetAxis("Mouse Y");// * 1f;
+            //if (Input.Get)
+            xAxis = Mathf.Clamp(xAxis, min, max);
+            if (xAxis == min || xAxis == max) return;
+            Spine.Rotate(0, 0, xAxis);
+            //Spine.localEulerAngles = newSpineRotation;
             //Debug.Log($"Rotate Spine: {newSpineRotation}");
+        }
+
+        private void LateUpdate() {
+            if (!isLocalPlayer) return;
+
+            RotateSpine();
         }
 
 
