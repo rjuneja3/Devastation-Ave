@@ -26,12 +26,12 @@ namespace Assets.Scripts.Weapons {
         private const float pickupDistance = 1.5f;
 
         protected AudioSource AudioSource;
-        protected Transform Player;
+        protected static Transform Player;
         private bool m_IsPrompting = false, m_IsPickedUp = false;
-        private WeaponHandler PlayerWeaponHandler;
         #endregion
 
         #region Properties
+        public static WeaponHandler PlayerWeaponHandler { get; set; }
         protected virtual bool CanAttack { get; set; } = true;
 
         public WeaponHandler CurrentHandler { get; private set; }
@@ -57,6 +57,13 @@ namespace Assets.Scripts.Weapons {
             if (Utils.FindPlayer(ref Player)) {
                 PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
             }
+        }
+
+        public static void SetPlayer(Transform player) {
+            if (!player) return;
+            Player = player;
+            PlayerWeaponHandler = Player.GetComponent<WeaponHandler>();
+            Debug.Log($"SET PLAYER {Player}, {PlayerWeaponHandler}");
         }
 
         /**
@@ -94,9 +101,9 @@ namespace Assets.Scripts.Weapons {
                 CanAttack = false;
                 Invoke("SetAttackFlag", RateOfAttack);
             } else return;
-            
 
-            AudioSource.Play();
+
+            PlaySound();
 
             Attack();
         }
@@ -110,6 +117,10 @@ namespace Assets.Scripts.Weapons {
         public virtual void Hit(GameObject o) {
             CurrentHandler?.OnHit(o);
             OnHit?.Invoke(o);
+        }
+
+        public void PlaySound() {
+            AudioSource?.Play();
         }
 
         /**

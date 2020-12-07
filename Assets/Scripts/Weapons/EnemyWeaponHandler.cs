@@ -104,6 +104,8 @@ namespace Assets.Scripts.Weapons {
                 entity.Health.CurrentHP -= CurrentWeapon.Damage * GameSettings.EnemyDamageMultiplier;
             }
         }
+
+        public override void OnShoot() { }
         #endregion
     }
 }

@@ -54,7 +54,6 @@ namespace Assets.Scripts.Weapons {
         }
 
         public override void OnShoot() {
-            base.OnShoot();
             PlayerController?.TriggerFire();
         }
 

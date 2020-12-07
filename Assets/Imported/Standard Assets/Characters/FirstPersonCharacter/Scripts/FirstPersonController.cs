@@ -42,9 +42,14 @@ namespace Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Script
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        private bool IsMultiplayer;
+        private Assets.Scripts.Multiplayer.MultiplayerController MController;
+
         // Use this for initialization
-        private void Start()
+        public void Start()
         {
+            MController = GetComponent<Assets.Scripts.Multiplayer.MultiplayerController>();
+            IsMultiplayer = MController;
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -61,6 +66,8 @@ namespace Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Script
         // Update is called once per frame
         private void Update()
         {
+            if (IsMultiplayer && !MController.isLocalPlayer) return;
+
             RotateView();
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
@@ -95,6 +102,7 @@ namespace Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Script
 
         private void FixedUpdate()
         {
+            if (IsMultiplayer && !MController.isLocalPlayer) return;
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at

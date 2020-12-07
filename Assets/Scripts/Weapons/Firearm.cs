@@ -156,7 +156,9 @@ namespace Assets.Scripts.Weapons {
             MuzzleFlash();
             if (CurrentHandler) {
                 CurrentHandler.OnShoot();
-                FactionManager.ProduceNoise(CurrentHandler.Entity.Faction, NoiseType.GunShot, transform.position);
+                if (CurrentHandler?.Entity) {
+                    FactionManager.ProduceNoise(CurrentHandler.Entity.Faction, NoiseType.GunShot, transform.position);
+                }
             }
             BulletQueue.Enqueue(bullet);
             Invoke("DelayBullet", BulletDelay);

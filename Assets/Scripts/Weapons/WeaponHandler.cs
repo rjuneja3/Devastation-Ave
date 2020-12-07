@@ -132,7 +132,7 @@ namespace Assets.Scripts.Weapons {
          * @date 11/22/20
          * <summary>Called if the current weapon is a Firearm and it shoots</summary>
          */
-        public virtual void OnShoot() { }
+        public abstract void OnShoot();
         // TODO: ^^^ potentially change to abstract method
 
         /**
