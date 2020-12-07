@@ -13,18 +13,22 @@ public class HudHandler : MonoBehaviour {
     #endregion
 
     #region Variables
+    public const string SCORE_PREF = "player_score";
     private static int m_Points = 0;
     #endregion
+
     #region Properties
     public static HudHandler Self { get; private set; }
     public static int Points {
         get => m_Points;
         set {
             m_Points = value;
-            if (Self && Self.PointsText) {
-                Self.PointsText.text = $"{m_Points}";
+            if (m_Points != value) {
+                PlayerPrefs.SetInt(SCORE_PREF, m_Points);
             }
-            PlayerPrefs.SetInt("Hiscore", m_Points);
+            if (Self && Self.PointsText) {
+                Self.PointsText.text = m_Points.ToString();
+            }
         }
     }
     #endregion
@@ -35,12 +39,12 @@ public class HudHandler : MonoBehaviour {
         Self = this;
     }
 
-
-
     private void Start() {
         GetText("DialogText", ref DialogText);
-        GetText("DialogText", ref DialogText);
+        GetText("PromptText", ref PromptText);
         GetText("PointsText", ref PointsText);
+
+        Points = PlayerPrefs.GetInt(SCORE_PREF, 0);
     }
 
     private void GetText(string n, ref Text field) {
