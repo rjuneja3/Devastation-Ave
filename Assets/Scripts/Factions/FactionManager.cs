@@ -60,7 +60,7 @@ namespace Assets.Scripts.Factions {
             while (RegisterQueue.Count > 0) {
                 Register(RegisterQueue.Dequeue());
             }
-            RegisterQueue = null;
+            //RegisterQueue = null;
         }
         // private void Update() { }
 
