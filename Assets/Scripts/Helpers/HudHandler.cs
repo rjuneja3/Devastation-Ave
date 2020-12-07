@@ -41,7 +41,7 @@ public class HudHandler : MonoBehaviour {
 
     private void Start() {
         GetText("DialogText", ref DialogText);
-        GetText("DialogText", ref DialogText);
+        GetText("PromptText", ref PromptText);
         GetText("PointsText", ref PointsText);
 
         Points = PlayerPrefs.GetInt(SCORE_PREF, 0);
