@@ -323,7 +323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RateOfAttack: 0.2
   Range: 200
-  Damage: 10
+  Damage: 35
   DebugMode: 1
   HipFireRadius: 60
   MagSize: 30
