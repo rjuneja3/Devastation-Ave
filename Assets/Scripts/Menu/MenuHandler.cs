@@ -8,7 +8,7 @@ namespace Assets.Scripts.Menu {
     public class MenuHandler : MonoBehaviour {
 
         public void OnMultiplayerClick() {
-            SceneManager.LoadScene("TestMultiplayerScene");
+            SceneManager.LoadScene("MultiplayerLevel");
         }
     }
 }

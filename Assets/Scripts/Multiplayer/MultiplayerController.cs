@@ -55,7 +55,7 @@ namespace Assets.Scripts.Multiplayer {
             Health.OnDeath += OnDeath;
 
             SpawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-            Invoke("SpawnRandomly", 0);
+            // Invoke("SpawnRandomly", 0);
 
             //SpawnRandomly();
 
@@ -69,9 +69,9 @@ namespace Assets.Scripts.Multiplayer {
         private void Update() {
             if (!isLocalPlayer) return;
             Move();
-            if (Input.GetKeyDown(KeyCode.T)) {
-                SpawnRandomly();
-            }
+            //if (Input.GetKeyDown(KeyCode.T)) {
+            //    SpawnRandomly();
+            //}
             //RotateSpine();
         }
 
