@@ -2259,6 +2259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aca1e57d0603cd45a5e3a138b56b1bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentHP: 100
 --- !u!114 &8884912941732188188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2272,6 +2273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Spine: {fileID: 6982446830824493687}
+  RotateSpine: 0
 --- !u!114 &5256258670909341599
 MonoBehaviour:
   m_ObjectHideFlags: 0

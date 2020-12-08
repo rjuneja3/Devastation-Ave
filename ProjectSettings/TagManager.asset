@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Enemy
   - Fire
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

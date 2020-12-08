@@ -8,8 +8,8 @@ using UnityEngine.Networking;
 namespace Assets.Scripts.Multiplayer {
     public class MultiplayerHealth : NetworkBehaviour {
 
-        [SyncVar]
-        private float CurrentHP = 100f;
+        [SyncVar(hook ="OnHealthChange")]
+        public float CurrentHP = 100f;
 
         public static MultiplayerHealth Local { get; private set; }
 
@@ -24,8 +24,16 @@ namespace Assets.Scripts.Multiplayer {
 
         private void Update() { }
 
+        public void OnHealthChange(float hp) {
+            Debug.Log($"OnHealthChange() -> {hp}");
+        }
+
         public void TakeDamage(float damage) {
-            CurrentHP = Mathf.Max(CurrentHP - damage, 0f);
+            var take = CurrentHP - damage;
+            CurrentHP = Mathf.Max(take, 0f);
+
+            var value = GetComponent<NetworkIdentity>().netId.Value;
+            Debug.Log($"{value} Take damage -> {CurrentHP}");
             if (CurrentHP == 0f) {
                 OnDeath?.Invoke();
             }

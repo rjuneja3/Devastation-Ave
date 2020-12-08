@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Assets.Scripts.Factions;
 using Assets.Imported.Standard_Assets.Characters.FirstPersonCharacter.Scripts;
+using ASP = Assets.Scripts.Player;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 namespace Assets.Scripts.Multiplayer {
@@ -13,11 +14,13 @@ namespace Assets.Scripts.Multiplayer {
 
         #region Exposed Variables
         public Transform Spine;
+        public bool RotateSpine = false;
         #endregion
 
         #region Variables
         private Transform cameraPos;
         private Animator Animator;
+        private static GameObject[] SpawnPoints = { };
         private float xAxis = 0f;
         #endregion
 
@@ -48,6 +51,13 @@ namespace Assets.Scripts.Multiplayer {
             camera.transform.SetParent(cameraPos);
             camera.transform.localPosition = Vector3.zero;
             camera.transform.localRotation = Quaternion.identity;
+            if (!Health) Health = GetComponent<MultiplayerHealth>();
+            Health.OnDeath += OnDeath;
+
+            SpawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+            Invoke("SpawnRandomly", 0);
+
+            //SpawnRandomly();
 
             //var handler = GetComponent<MultiplayerWeaponHandler>();
             //if (handler.Weapon) handler.OutsideEquip(handler.Weapon);
@@ -59,6 +69,9 @@ namespace Assets.Scripts.Multiplayer {
         private void Update() {
             if (!isLocalPlayer) return;
             Move();
+            if (Input.GetKeyDown(KeyCode.T)) {
+                SpawnRandomly();
+            }
             //RotateSpine();
         }
 
@@ -80,8 +93,10 @@ namespace Assets.Scripts.Multiplayer {
 
         [Command]
         public void CmdHit(NetworkInstanceId id, float damage) {
-            NetworkServer.FindLocalObject(id).BroadcastMessage(
-                "TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
+            var obj = NetworkServer.FindLocalObject(id);
+            var health = obj.GetComponent<MultiplayerHealth>();
+            health.TakeDamage(damage);
+            // .BroadcastMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
         }
 
         [Command]
@@ -90,10 +105,9 @@ namespace Assets.Scripts.Multiplayer {
                 Debug.Log($"Player ID matched. returning out.");
                 return;
             }
-
             var player = NetworkServer.FindLocalObject(playerId);
             var handler = player.GetComponent<MultiplayerWeaponHandler>();
-
+            
             if (handler) {
                 var weapon = NetworkServer.FindLocalObject(weaponId);
                 if (handler.OutsideEquip(weapon)) {
@@ -111,11 +125,12 @@ namespace Assets.Scripts.Multiplayer {
         
         private void OnDestroy() {
             if (isLocalPlayer) {
-                Camera.main?.transform.SetParent(null);
+                Camera.main?.transform?.SetParent(null);
             }
         }
 
-        private void RotateSpine() {
+        private void UpdateSpineRotation() {
+            if (!RotateSpine) return;
             //Spine.Rotate()
             const int min = -50, max = 400;
             //Spine.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Spine.up);
@@ -133,7 +148,7 @@ namespace Assets.Scripts.Multiplayer {
         private void LateUpdate() {
             if (!isLocalPlayer) return;
 
-            RotateSpine();
+            UpdateSpineRotation();
         }
 
 
@@ -147,7 +162,6 @@ namespace Assets.Scripts.Multiplayer {
             float h = HorizontalAxis,
                 v = VerticalAxis;
 
-
             float xSpeed = h * speedLimit;
             float zSpeed = v * speedLimit;
             if (Input.GetKey(KeyCode.LeftShift)) {
@@ -160,11 +174,36 @@ namespace Assets.Scripts.Multiplayer {
 
             //Animator.SetFloat("Speed", 1);//, .25f, Time.deltaTime);
 
-            if (v != 0 && h != 0) {
+            if (v != 0 || h != 0) {
                 FactionManager.ProduceNoise(Faction.Player, NoiseType.Walking, transform.position);
             }
         }
 
+        private void OnDeath() {
+            if (!isLocalPlayer) return;
+            
+            Health.TakeDamage(-100); // Restores player
+            Respawn(this);
+        }
+
+        private void SpawnRandomly() {
+            if (SpawnPoints != null && SpawnPoints.Length > 0) {
+                var old = transform.position;
+                int p = Random.Range(0, SpawnPoints.Length - 1);
+                Vector3 point = SpawnPoints[p].transform.position;
+                point.y = transform.position.y + .5f;
+                transform.position = point;
+
+                Debug.Log($"Spawn: {old} ; {transform.position}");
+            }
+        }
+        
+        public static void Respawn(MultiplayerController mc) {
+            var conn = mc.connectionToClient;
+            var newPlayer = Instantiate(mc.gameObject);
+            Destroy(mc.gameObject);
+            NetworkServer.ReplacePlayerForConnection(conn, newPlayer, 0);
+        }
 
         #endregion
     }
