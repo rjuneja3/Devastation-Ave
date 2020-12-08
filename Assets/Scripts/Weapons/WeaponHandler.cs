@@ -117,8 +117,8 @@ namespace Assets.Scripts.Weapons {
             void set(AnimationLayer a) {
                 float w = Mathf.Clamp01((float)(a & layer)); // Converts layer into 1f or 0f
                 string s = a.ToString("G"); // Gets the literal name of the layer
-                int i = Animator.GetLayerIndex(s); // Gets the layer index from the name
-                Animator.SetLayerWeight(i, w); // sets the weight of the layer
+                int i = Animator?.GetLayerIndex(s) ?? -1; // Gets the layer index from the name
+                if (i != -1) Animator.SetLayerWeight(i, w); // sets the weight of the layer
             }
 
             // Runs code for each layer
