@@ -12,6 +12,7 @@ public class Loader : MonoBehaviour
 
     public void LoadLevel(int sceneIndex)
     {
+        var s = SceneManager.GetSceneByName("Level1");
         StartCoroutine(LoadAsync(sceneIndex));
     }
 
