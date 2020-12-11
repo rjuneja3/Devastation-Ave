@@ -50,7 +50,7 @@ namespace Assets.Scripts.Multiplayer {
             var camera = GameObject.FindGameObjectWithTag("MainCamera");
             camera.transform.SetParent(cameraPos);
             camera.transform.localPosition = Vector3.zero;
-            camera.transform.localRotation = Quaternion.identity;
+            //camera.transform.localRotation = Quaternion.identity;
             if (!Health) Health = GetComponent<MultiplayerHealth>();
             Health.OnDeath += OnDeath;
 
@@ -94,6 +94,7 @@ namespace Assets.Scripts.Multiplayer {
         [Command]
         public void CmdHit(NetworkInstanceId id, float damage) {
             var obj = NetworkServer.FindLocalObject(id);
+            if (!obj) return;
             var health = obj.GetComponent<MultiplayerHealth>();
             health.TakeDamage(damage);
             // .BroadcastMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
@@ -181,7 +182,7 @@ namespace Assets.Scripts.Multiplayer {
 
         private void OnDeath() {
             if (!isLocalPlayer) return;
-            
+            Debug.Log("ON Death " + netId.Value);
             Health.TakeDamage(-100); // Restores player
             Respawn(this);
         }

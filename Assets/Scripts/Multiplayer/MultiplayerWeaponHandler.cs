@@ -55,13 +55,14 @@ namespace Assets.Scripts.Multiplayer {
 
         public void TriggerFire() {
             Animator.SetTrigger("Fire");
-            drawer.DrawLineInGameView(
-                Camera.main.transform.position,
-                Camera.main.transform.forward * 100f, Color.yellow);
+            var pos = Camera.main.transform.position;
+            drawer.DrawLineInGameView(pos,
+                pos + (Camera.main.transform.forward * 100f), Color.yellow);
             CurrentWeapon?.PlaySound();
         }
 
         public override void OnHit(GameObject o) {
+            //if (o.layer == )
             var identity = o.transform.GetComponent<NetworkIdentity>();
             if (identity) {
                 Debug.Log($"OnHit() -> About to call CmdHit on {identity.netId.Value}");
