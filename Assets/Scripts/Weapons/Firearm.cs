@@ -112,6 +112,9 @@ namespace Assets.Scripts.Weapons {
             uint take = Math.Min(Ammo, amount);
             CurrentMag += take;
             Ammo -= take;
+            if (CurrentHandler is PlayerWeaponHandler) {
+                HudHandler.UpdateAmmo(CurrentMag, Ammo);
+            }
             CurrentlyReloading = false;
         }
 
@@ -152,10 +155,13 @@ namespace Assets.Scripts.Weapons {
             };
 
             CurrentMag--; // Subtracts a bullet from the mag
-
+            
             MuzzleFlash();
             if (CurrentHandler) {
                 CurrentHandler.OnShoot();
+                if (CurrentHandler is PlayerWeaponHandler) {
+                    HudHandler.UpdateAmmo(CurrentMag, Ammo);
+                }
                 if (CurrentHandler?.Entity) {
                     FactionManager.ProduceNoise(CurrentHandler.Entity.Faction, NoiseType.GunShot, transform.position);
                 }

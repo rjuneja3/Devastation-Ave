@@ -10,6 +10,7 @@ public class HudHandler : MonoBehaviour {
     public Text PromptText;
     public Text DialogText;
     public Text PointsText;
+    public Text AmmoText;
     #endregion
 
     #region Variables
@@ -43,28 +44,38 @@ public class HudHandler : MonoBehaviour {
         GetText("DialogText", ref DialogText);
         GetText("PromptText", ref PromptText);
         GetText("PointsText", ref PointsText);
+        GetText("AmmoText", ref AmmoText);
 
         Points = PlayerPrefs.GetInt(SCORE_PREF, 0);
     }
 
     private void GetText(string n, ref Text field) {
         if (!field) {
-            var t = transform.Find(n);
-            if (t) field = t.GetComponent<Text>();
+            Text text = null;
+            try {
+                text = transform.Find(n)?.GetComponent<Text>();
+            } catch (System.Exception) { }
+            if (text) field = text;
         }
     }
     
     // private void Update() { }
 
     public static void Prompt(KeyCode key, string text) {
-        if (Self) {
+        if (Self?.PromptText) {
             Self.PromptText.text = $"Press [{key}] {text}";
         }
     }
 
     public static void ClearPrompt() {
-        if (Self) {
+        if (Self?.PromptText) {
             Self.PromptText.text = string.Empty;
+        }
+    }
+
+    public static void UpdateAmmo(uint mag, uint reserve) {
+        if (Self?.AmmoText) {
+            Self.AmmoText.text = $"AMMO: {mag} | {reserve}";
         }
     }
     
