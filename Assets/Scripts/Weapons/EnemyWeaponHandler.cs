@@ -98,6 +98,11 @@ namespace Assets.Scripts.Weapons {
          * <param name="o">The object hit by the weapon (or bullet)</param>
          */
         public override void OnHit(GameObject o) {
+            if (o.tag == "Player" && GameSettings.MakePlayerImmortal) {
+                Debug.Log("Player is immortal.");
+                return;
+            }
+
             Faction check = Faction.All ^ Entity.Faction;
             if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {
                 print($"{Entity} hit {entity}");

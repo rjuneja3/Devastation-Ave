@@ -99,6 +99,10 @@ namespace Assets.Scripts.Enemy {
         // TODO: fix hits on other enemies
         private void OnHitBoxCollide(GameObject o) {
             if (IsAttacking && o.layer == FactionEntity.ENTITY_LAYER_INDEX) {
+                if (o.tag == "Player" && GameSettings.MakePlayerImmortal) {
+                    Debug.Log($"Player {o.name} is immortal.");
+                    return;
+                }
                 var check = Faction.All ^ Entity.Faction;
                 print($"{name} is attacking {o.name}");
                 if (FactionManager.CheckCache(check, o.transform, out var entity, false)) {

@@ -37,6 +37,7 @@ namespace Assets.Scripts.General {
         }
         public static float EnemyDamageMultiplier { get; private set; } = 1f;
         public static float DetectionMultiplier { get; private set; } = 1f;
+        public static bool MakePlayerImmortal { get; set; } = false;
         #endregion
 
         #region Methods

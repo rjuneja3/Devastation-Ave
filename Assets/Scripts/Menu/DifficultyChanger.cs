@@ -12,6 +12,8 @@ namespace Assets.Scripts.Menu {
             EasyButton,
             NormalButton,
             HardButton;
+
+        public Toggle ImmortalToggle;
         #endregion
 
         #region Variables
@@ -27,6 +29,12 @@ namespace Assets.Scripts.Menu {
             SetUpButton(Difficulty.Hard, ref HardButton);
 
             UpdateButtons(GameSettings.Difficulty);
+
+            if (!ImmortalToggle) {
+                ImmortalToggle = transform.Find(nameof(ImmortalToggle))?.GetComponent<Toggle>();
+            }
+
+            ImmortalToggle.isOn = GameSettings.MakePlayerImmortal;
         }
 
         private void SetUpButton(Difficulty diff, ref Button button) {
@@ -68,6 +76,11 @@ namespace Assets.Scripts.Menu {
         public void OnEasyClick() => OnDifficultyChange(Difficulty.Easy);
         public void OnNormalClick() => OnDifficultyChange(Difficulty.Normal);
         public void OnHardClick() => OnDifficultyChange(Difficulty.Hard);
+
+        public void OnImmortalChecked() {
+            if (!ImmortalToggle) return;
+            GameSettings.MakePlayerImmortal = ImmortalToggle.isOn;
+        }
         #endregion
     }
 }
