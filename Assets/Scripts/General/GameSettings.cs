@@ -58,6 +58,7 @@ namespace Assets.Scripts.General {
             DetectionMultiplier = .5f + (.25f * (float)Difficulty); // Easy=0.75, Normal=1, Hard=1.25
 
             m_Difficulty = difficulty;
+            Debug.Log($"Updated difficulty to {m_Difficulty}");
         }
         #endregion
     }
