@@ -60,7 +60,7 @@ namespace Assets.Scripts.Player {
         }
 
         private void OnDeath() {
-            Invoke("ReloadScene", 5f);
+            Invoke("ReloadScene", 1f);
         }
 
         private void ReloadScene() {
