@@ -12,6 +12,9 @@ namespace Assets.Scripts.Multiplayer {
         private MultiplayerController Controller;
         private e.LineDrawer drawer;
 
+        public override Vector3 BulletOrigin => Camera.main.transform.position;
+        public override Vector3 BulletDirection => Camera.main.transform.forward;
+
         public static MultiplayerWeaponHandler Local { get; internal set; }
 
         protected override void Start() {
