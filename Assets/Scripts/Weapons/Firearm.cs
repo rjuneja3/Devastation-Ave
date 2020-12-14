@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Factions;
+using Assets.Scripts.Multiplayer.e;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -74,6 +75,7 @@ namespace Assets.Scripts.Weapons {
         }
 
         public ReloadFlag CurrentFlags { get; private set; }
+        private LineDrawer Drawer;
         #endregion
 
         #region Methods
@@ -99,6 +101,7 @@ namespace Assets.Scripts.Weapons {
                 ShootPoint = sp.gameObject;
                 ShootPointLight = sp.GetComponent<Light>();
             }
+            //Drawer = new LineDrawer();
             RefillMag();
         }
 
@@ -194,6 +197,8 @@ namespace Assets.Scripts.Weapons {
                 var point = b.Origin + (b.Direction * Range);
                 Debug.DrawLine(b.Origin, point, Color.yellow, 5f);
             }
+
+            //Drawer.DrawLineInGameView(b.Origin, b.Origin + b.Direction, Color.blue);
         }
 
         /**

@@ -30,16 +30,18 @@ namespace Assets.Scripts.Weapons {
 
         #region Properties
         public bool Fire1 => Input.GetButton("Fire1");
-        public override Vector3 BulletOrigin => Camera.main.transform.position;
-        public override Vector3 BulletDirection => Camera.main.transform.forward;
+        public override Vector3 BulletOrigin => Cam.transform.position;
+        public override Vector3 BulletDirection => Cam.transform.forward;
         public override Vector3 FirearmPosition => PlayerFirearmPosition;
         public override Vector3 FirearmEulerRotation => PlayerFirearmEulerRotation;
+        private Camera Cam;
         #endregion
 
         #region Methods
         protected override void Start() {
             base.Start();
             PlayerController = GetComponent<PlayerController>();
+            Cam = transform.GetComponentInChildren<Camera>();
         }
 
         protected override void Update() {
